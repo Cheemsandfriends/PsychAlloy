@@ -38,6 +38,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	private var grpTexts:FlxTypedGroup<AttachedText>;
 
 	private var boyfriend:Character = null;
+	private var miniBoyfriend:Character = null;
 	private var descBox:FlxSprite;
 	private var descText:FlxText;
 
@@ -259,8 +260,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			}
 		}
 
-		if(boyfriend != null && boyfriend.animation.curAnim.finished) {
+		if(boyfriend != null && boyfriend.isFinishedAnim()) {
 			boyfriend.dance();
+			miniBoyfriend.dance();
 		}
 
 		if(nextAccept > 0) {
@@ -274,6 +276,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		var val:Dynamic = option.getValue();
 		if(option.type == 'percent') val *= 100;
 		var def:Dynamic = option.defaultValue;
+		trace(val);
 		option.text = text.replace('%v', val).replace('%d', def);
 	}
 
@@ -322,6 +325,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(boyfriend != null)
 		{
 			boyfriend.visible = optionsArray[curSelected].showBoyfriend;
+			miniBoyfriend.visible = optionsArray[curSelected].showBoyfriend;
 		}
 		curOption = optionsArray[curSelected]; //shorter lol
 		FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -336,13 +340,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			remove(boyfriend);
 			boyfriend.destroy();
 		}
-
-		boyfriend = new Character(840, 170, 'bf', true);
+		var cl = Paths.currentLevel;
+		Paths.setCurrentLevel("shared");
+		boyfriend = new Character(840, 170, 'tzenbf', true);
 		boyfriend.setGraphicSize(Std.int(boyfriend.width * 0.75));
 		boyfriend.updateHitbox();
 		boyfriend.dance();
 		insert(1, boyfriend);
 		boyfriend.visible = wasVisible;
+
+		miniBoyfriend = new Character(boyfriend.x - boyfriend.width * 1.5 + 50, boyfriend.y - boyfriend.height * 0.5, 'gf');
+		miniBoyfriend.setGraphicSize(Std.int(miniBoyfriend.width * 0.2));
+		miniBoyfriend.updateHitbox();
+		miniBoyfriend.dance();
+		insert(2, miniBoyfriend);
+		miniBoyfriend.visible = wasVisible;
+		Paths.setCurrentLevel(cl);
 	}
 
 	function reloadCheckboxes() {

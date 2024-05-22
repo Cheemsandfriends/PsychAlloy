@@ -7,7 +7,7 @@ import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -137,6 +137,16 @@ class PauseSubState extends MusicBeatSubstate
 
 	var holdTime:Float = 0;
 	var cantUnpause:Float = 0.1;
+
+	override function close() 
+	{
+		for (member in members)
+		{
+			if (member != null)
+				member.destroy();
+		}
+		super.close();
+	}
 	override function update(elapsed:Float)
 	{
 		cantUnpause -= elapsed;
@@ -256,11 +266,8 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.seenCutscene = false;
 
 					WeekData.loadTheFirstEnabledMod();
-					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new StoryMenuState());
-					} else {
-						MusicBeatState.switchState(new FreeplayState());
-					}
+					NoteSplash.texturesLoaded = [];
+					MusicBeatState.switchState(new MainMenuState());
 					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;

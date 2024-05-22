@@ -1,8 +1,8 @@
 package;
-
+#if !hl
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
-
+#end
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.State;
@@ -15,9 +15,10 @@ class DiscordClient
 	public static var isInitialized:Bool = false;
 	public function new()
 	{
+		#if !hl
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			clientID: "863222024192262205",
+			clientID: "997560407344562180",
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected
@@ -32,21 +33,28 @@ class DiscordClient
 		}
 
 		DiscordRpc.shutdown();
+		#else
+		trace("not supported!");
+		#end
 	}
 	
 	public static function shutdown()
 	{
+		#if !hl
 		DiscordRpc.shutdown();
+		#end
 	}
 	
 	static function onReady()
 	{
+		#if !hl
 		DiscordRpc.presence({
 			details: "In the Menus",
 			state: null,
 			largeImageKey: 'icon',
-			largeImageText: "Psych Engine"
+			largeImageText: "FNF: Settle into da Metal"
 		});
+		#end
 	}
 
 	static function onError(_code:Int, _message:String)
@@ -61,17 +69,25 @@ class DiscordClient
 
 	public static function initialize()
 	{
+		#if !hl
 		var DiscordDaemon = sys.thread.Thread.create(() ->
 		{
 			new DiscordClient();
 		});
+		
 		trace("Discord Client initialized");
 		isInitialized = true;
+		#end
 	}
 
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
 	{
-		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
+		#if !hl
+		#if debug
+		details = "Bro? whatchu looking at?";
+		state = null;
+		#end
+		var startTimestamp:Float = (hasStartTimestamp) ? Date.now().getTime() : 0;
 
 		if (endTimestamp > 0)
 		{
@@ -88,7 +104,7 @@ class DiscordClient
 			startTimestamp : Std.int(startTimestamp / 1000),
             endTimestamp : Std.int(endTimestamp / 1000)
 		});
-
+		#end
 		//trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
 	}
 

@@ -1,5 +1,7 @@
 package;
 
+import flixel.graphics.tile.FlxDrawQuadsItem;
+import openfl.display3D.Context3DMipFilter;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
@@ -13,6 +15,8 @@ class ClientPrefs {
 	public static var showFPS:Bool = true;
 	public static var flashing:Bool = true;
 	public static var globalAntialiasing:Bool = true;
+	public static var mipMapping:Context3DMipFilter = MIPNONE;
+	public static var mipmapping:String = "None";
 	public static var noteSplashes:Bool = true;
 	public static var lowQuality:Bool = false;
 	public static var framerate:Int = 60;
@@ -99,6 +103,9 @@ class ClientPrefs {
 		FlxG.save.data.showFPS = showFPS;
 		FlxG.save.data.flashing = flashing;
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
+
+		FlxG.save.data.mipmapping = mipmapping;
+
 		FlxG.save.data.noteSplashes = noteSplashes;
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.framerate = framerate;
@@ -159,6 +166,20 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.globalAntialiasing != null) {
 			globalAntialiasing = FlxG.save.data.globalAntialiasing;
+		}
+		if(FlxG.save.data.mipmapping != null) {
+			switch (FlxG.save.data.mipmapping.toLowerCase())
+			{
+				case "fast":
+					mipMapping = MIPNEAREST;
+				case "high":
+					mipMapping = MIPLINEAR;
+				default:
+					mipMapping = MIPNONE;
+			}
+			mipmapping = FlxG.save.data.mipmapping;
+			
+			FlxDrawQuadsItem.mipmapping = mipMapping;
 		}
 		if(FlxG.save.data.noteSplashes != null) {
 			noteSplashes = FlxG.save.data.noteSplashes;

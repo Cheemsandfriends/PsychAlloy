@@ -1,10 +1,11 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 
 using StringTools;
 
-class AttachedSprite extends FlxSprite
+class AttachedSprite extends FlxFilteredSprite
 {
 	public var sprTracker:FlxSprite;
 	public var xAdd:Float = 0;

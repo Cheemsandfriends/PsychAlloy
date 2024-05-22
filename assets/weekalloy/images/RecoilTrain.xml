@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:e3e2a94d01ac484451cf8b4db2e3b9bb:2da2aa7cef46b7dfe07c527b9baad927:c032aefcfc77aee7eda089040631acbe$ -->
+<TextureAtlas imagePath="RecoilBGTrainLoop.png" width="1542" height="2570">
+    <SubTexture name="trainloop_0000" x="1" y="1" width="512" height="512"/>
+    <SubTexture name="trainloop_0002" x="515" y="1" width="512" height="512"/>
+    <SubTexture name="trainloop_0004" x="1029" y="1" width="512" height="512"/>
+    <SubTexture name="trainloop_0006" x="1" y="515" width="512" height="512"/>
+    <SubTexture name="trainloop_0008" x="515" y="515" width="512" height="512"/>
+    <SubTexture name="trainloop_0010" x="1029" y="515" width="512" height="512"/>
+    <SubTexture name="trainloop_0012" x="1" y="1029" width="512" height="512"/>
+    <SubTexture name="trainloop_0014" x="515" y="1029" width="512" height="512"/>
+    <SubTexture name="trainloop_0016" x="1029" y="1029" width="512" height="512"/>
+    <SubTexture name="trainloop_0018" x="1" y="1543" width="512" height="512"/>
+    <SubTexture name="trainloop_0020" x="515" y="1543" width="512" height="512"/>
+    <SubTexture name="trainloop_0022" x="1029" y="1543" width="512" height="512"/>
+    <SubTexture name="trainloop_0024" x="1" y="2057" width="512" height="512"/>
+    <SubTexture name="trainloop_0026" x="515" y="2057" width="512" height="512"/>
+    <SubTexture name="trainloop_0028" x="1029" y="2057" width="512" height="512"/>
+</TextureAtlas>

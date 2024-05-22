@@ -53,6 +53,8 @@ class StageData {
 					stage = 'schoolEvil';
 				case 'ugh' | 'guns' | 'stress':
 					stage = 'tank';
+				case 'arena':
+					stage = "crash";
 				default:
 					stage = 'stage';
 			}
@@ -71,7 +73,6 @@ class StageData {
 	public static function getStageFile(stage:String):StageFile {
 		var rawJson:String = null;
 		var path:String = Paths.getPreloadPath('stages/' + stage + '.json');
-
 		#if MODS_ALLOWED
 		var modPath:String = Paths.modFolders('stages/' + stage + '.json');
 		if(FileSystem.exists(modPath)) {

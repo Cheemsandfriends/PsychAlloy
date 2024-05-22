@@ -1,5 +1,7 @@
 package;
 
+import flixel.animation.FlxAnimationController;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -95,6 +97,36 @@ class Note extends FlxSprite
 
 	public var hitsoundDisabled:Bool = false;
 
+	public var frozen(default, set):Bool;
+
+	var _noteType:String;
+
+	var _frozenFrames:FlxFramesCollection;
+	var _cacheFrames:FlxFramesCollection;
+
+	function set_frozen(value:Bool)
+	{
+		if (value != frozen)
+		{
+			frozen = value;
+			
+			if (frozen)
+			{
+				_noteType = noteType;
+
+				noteType = "Frozen Note";
+			}
+			else
+			{
+				noteType = _noteType;
+
+				reloadNote();
+				_noteType = null;
+			}
+		}
+		return value;
+	}
+
 	private function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
 		multSpeed = value;
@@ -124,7 +156,7 @@ class Note extends FlxSprite
 		colorSwap.hue = ClientPrefs.arrowHSV[noteData % 4][0] / 360;
 		colorSwap.saturation = ClientPrefs.arrowHSV[noteData % 4][1] / 100;
 		colorSwap.brightness = ClientPrefs.arrowHSV[noteData % 4][2] / 100;
-
+	
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
@@ -142,6 +174,13 @@ class Note extends FlxSprite
 						missHealth = 0.3;
 					}
 					hitCausesMiss = true;
+				case 'Frozen Note':
+					reloadNote(null, 'NOTE_ICED');
+					noteSplashTexture = "noteSplashesICE";
+
+					if (_frozenFrames == null)
+						_frozenFrames = frames;
+					
 				case 'Alt Animation':
 					animSuffix = '-alt';
 				case 'No Animation':
@@ -158,10 +197,9 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?frozenAssets:Bool = false)
 	{
 		super();
-
 		if (prevNote == null)
 			prevNote = this;
 
@@ -174,9 +212,7 @@ class Note extends FlxSprite
 		y -= 2000;
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.noteOffset;
-
 		this.noteData = noteData;
-
 		if(noteData > -1) {
 			texture = '';
 			colorSwap = new ColorSwap();
@@ -202,7 +238,7 @@ class Note extends FlxSprite
 
 		// trace(prevNote);
 
-		if(prevNote!=null)
+		if(prevNote != null)
 			prevNote.nextNote = this;
 
 		if (isSustainNote && prevNote != null)
@@ -295,9 +331,11 @@ class Note extends FlxSprite
 
 		var arraySkin:Array<String> = skin.split('/');
 		arraySkin[arraySkin.length-1] = prefix + arraySkin[arraySkin.length-1] + suffix;
+		
 
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
+
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'));
@@ -328,7 +366,10 @@ class Note extends FlxSprite
 				}*/
 			}
 		} else {
-			frames = Paths.getSparrowAtlas(blahblah);
+			if (frozen && _cacheFrames == null)
+				_cacheFrames = frames;
+			frames = (frozen && _frozenFrames != null) ? _frozenFrames : (_cacheFrames != null) ? _cacheFrames : Paths.getSparrowAtlas(blahblah);
+
 			loadNoteAnims();
 			antialiasing = ClientPrefs.globalAntialiasing;
 		}
@@ -347,22 +388,13 @@ class Note extends FlxSprite
 	}
 
 	function loadNoteAnims() {
-		animation.addByPrefix('greenScroll', 'green0');
-		animation.addByPrefix('redScroll', 'red0');
-		animation.addByPrefix('blueScroll', 'blue0');
-		animation.addByPrefix('purpleScroll', 'purple0');
-
-		if (isSustainNote)
+		var notes = ["purple", "blue", "green", "red"];
+		for (note in notes)
 		{
-			animation.addByPrefix('purpleholdend', 'pruple end hold');
-			animation.addByPrefix('greenholdend', 'green hold end');
-			animation.addByPrefix('redholdend', 'red hold end');
-			animation.addByPrefix('blueholdend', 'blue hold end');
+			animation.addByPrefix('${note}Scroll', '${note}0');
 
-			animation.addByPrefix('purplehold', 'purple hold piece');
-			animation.addByPrefix('greenhold', 'green hold piece');
-			animation.addByPrefix('redhold', 'red hold piece');
-			animation.addByPrefix('bluehold', 'blue hold piece');
+			animation.addByPrefix('${note}holdend', (note == "purple") ? "pruple end hold" : '$note hold end');
+			animation.addByPrefix('${note}hold', '$note hold piece');
 		}
 
 		setGraphicSize(Std.int(width * 0.7));
@@ -370,22 +402,19 @@ class Note extends FlxSprite
 	}
 
 	function loadPixelNoteAnims() {
-		if(isSustainNote) {
-			animation.add('purpleholdend', [PURP_NOTE + 4]);
-			animation.add('greenholdend', [GREEN_NOTE + 4]);
-			animation.add('redholdend', [RED_NOTE + 4]);
-			animation.add('blueholdend', [BLUE_NOTE + 4]);
+		animation.add('purpleholdend', [PURP_NOTE + 4]);
+		animation.add('greenholdend', [GREEN_NOTE + 4]);
+		animation.add('redholdend', [RED_NOTE + 4]);
+		animation.add('blueholdend', [BLUE_NOTE + 4]);
 
-			animation.add('purplehold', [PURP_NOTE]);
-			animation.add('greenhold', [GREEN_NOTE]);
-			animation.add('redhold', [RED_NOTE]);
-			animation.add('bluehold', [BLUE_NOTE]);
-		} else {
-			animation.add('greenScroll', [GREEN_NOTE + 4]);
-			animation.add('redScroll', [RED_NOTE + 4]);
-			animation.add('blueScroll', [BLUE_NOTE + 4]);
-			animation.add('purpleScroll', [PURP_NOTE + 4]);
-		}
+		animation.add('purplehold', [PURP_NOTE]);
+		animation.add('greenhold', [GREEN_NOTE]);
+		animation.add('redhold', [RED_NOTE]);
+		animation.add('bluehold', [BLUE_NOTE]);
+		animation.add('greenScroll', [GREEN_NOTE + 4]);
+		animation.add('redScroll', [RED_NOTE + 4]);
+		animation.add('blueScroll', [BLUE_NOTE + 4]);
+		animation.add('purpleScroll', [PURP_NOTE + 4]);
 	}
 
 	override function update(elapsed:Float)

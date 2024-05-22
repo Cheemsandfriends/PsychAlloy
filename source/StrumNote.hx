@@ -1,5 +1,7 @@
 package;
 
+import flixel.graphics.frames.FlxFramesCollection;
+import flixel.math.FlxMath;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -14,6 +16,11 @@ class StrumNote extends FlxSprite
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
+	public var alloyEvent(default, set):Bool = false;
+	public var frozen(default, set):Bool;
+
+	var _frozenFrames:FlxFramesCollection;
+	var _cacheFrames:FlxFramesCollection;
 	
 	private var player:Int;
 	
@@ -25,7 +32,7 @@ class StrumNote extends FlxSprite
 		}
 		return value;
 	}
-
+	var directions = ["left", "down", "up", "right"];
 	public function new(x:Float, y:Float, leData:Int, player:Int) {
 		colorSwap = new ColorSwap();
 		shader = colorSwap.shader;
@@ -45,7 +52,7 @@ class StrumNote extends FlxSprite
 	{
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
-
+		noteData = FlxMath.absInt(noteData);
 		if(PlayState.isPixelStage)
 		{
 			loadGraphic(Paths.image('pixelUI/' + texture));
@@ -56,11 +63,7 @@ class StrumNote extends FlxSprite
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 
-			animation.add('green', [6]);
-			animation.add('red', [7]);
-			animation.add('blue', [5]);
-			animation.add('purple', [4]);
-			switch (Math.abs(noteData))
+			switch (noteData)
 			{
 				case 0:
 					animation.add('static', [0]);
@@ -82,34 +85,24 @@ class StrumNote extends FlxSprite
 		}
 		else
 		{
-			frames = Paths.getSparrowAtlas(texture);
-			animation.addByPrefix('green', 'arrowUP');
-			animation.addByPrefix('blue', 'arrowDOWN');
-			animation.addByPrefix('purple', 'arrowLEFT');
-			animation.addByPrefix('red', 'arrowRIGHT');
+			if (frozen)
+			{
+				if (_cacheFrames == null)
+					_cacheFrames = frames;
+
+				frames = _frozenFrames;
+			}
+			else
+				frames = (alloyEvent) ? _cacheFrames : Paths.getSparrowAtlas(texture);
+
+
 
 			antialiasing = ClientPrefs.globalAntialiasing;
 			setGraphicSize(Std.int(width * 0.7));
-
-			switch (Math.abs(noteData))
-			{
-				case 0:
-					animation.addByPrefix('static', 'arrowLEFT');
-					animation.addByPrefix('pressed', 'left press', 24, false);
-					animation.addByPrefix('confirm', 'left confirm', 24, false);
-				case 1:
-					animation.addByPrefix('static', 'arrowDOWN');
-					animation.addByPrefix('pressed', 'down press', 24, false);
-					animation.addByPrefix('confirm', 'down confirm', 24, false);
-				case 2:
-					animation.addByPrefix('static', 'arrowUP');
-					animation.addByPrefix('pressed', 'up press', 24, false);
-					animation.addByPrefix('confirm', 'up confirm', 24, false);
-				case 3:
-					animation.addByPrefix('static', 'arrowRIGHT');
-					animation.addByPrefix('pressed', 'right press', 24, false);
-					animation.addByPrefix('confirm', 'right confirm', 24, false);
-			}
+			
+			animation.addByPrefix('static', 'arrow${directions[noteData].toUpperCase()}');
+			animation.addByPrefix('pressed', '${directions[noteData].toLowerCase()} press', 24, false);
+			animation.addByPrefix('confirm', '${directions[noteData].toLowerCase()} confirm', 24, false);
 		}
 		updateHitbox();
 
@@ -126,26 +119,51 @@ class StrumNote extends FlxSprite
 		x += ((FlxG.width / 2) * player);
 		ID = noteData;
 	}
+	function set_alloyEvent(event:Bool)
+	{
+		if (event)
+		{
+			if (alloyEvent) return event;
+			_frozenFrames = Paths.getSparrowAtlas("NOTE_ICED");
+		}
+		return alloyEvent = event;
+	}
+	function set_frozen(froze:Bool)
+	{
+		if (!alloyEvent) return false;
 
-	override function update(elapsed:Float) {
-		if(resetAnim > 0) {
-			resetAnim -= elapsed;
-			if(resetAnim <= 0) {
-				playAnim('static');
-				resetAnim = 0;
+		if (froze != frozen)
+		{
+			frozen = froze;
+			if (frozen)
+			{
+				texture = "NOTE_ICED";
+				reloadNote();
+			}
+			else
+			{
+				texture = "NOTE_assets";
+				if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) texture = PlayState.SONG.arrowSkin;
+				reloadNote();
 			}
 		}
-		//if(animation.curAnim != null){ //my bad i was upset
-		if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
-			centerOrigin();
-		//}
-		}
-
+		return froze;
+	}
+	override function update(elapsed:Float) {
 		super.update(elapsed);
+		if (resetAnim <= 0) return;
+
+		resetAnim -= elapsed;
+		if(resetAnim <= 0) {
+			playAnim('static');
+			resetAnim = 0;
+		}
 	}
 
 	public function playAnim(anim:String, ?force:Bool = false) {
-		animation.play(anim, force);
+		
+		(animation.exists(anim)) ? animation.play(anim, force) : animation.play('confirm', force, false, 1);
+		
 		centerOffsets();
 		centerOrigin();
 		if(animation.curAnim == null || animation.curAnim.name == 'static') {

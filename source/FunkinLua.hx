@@ -14,7 +14,7 @@ import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -2501,10 +2501,17 @@ class FunkinLua {
 			}
 			return blah;
 		}
+		if (!Math.isNaN(Std.parseFloat(value)))
+		{
+			value = Std.parseFloat(value);
+		}
+		if (value == "false")
+			value = false;
+		if (value == "true")
+			value = true;
 		/*if(Std.isOfType(instance, Map))
 			instance.set(variable,value);
 		else*/
-
 		Reflect.setProperty(instance, variable, value);
 		return true;
 	}

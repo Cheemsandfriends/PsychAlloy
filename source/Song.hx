@@ -69,7 +69,8 @@ class Song
 					var note:Array<Dynamic> = notes[i];
 					if(note[1] < 0)
 					{
-						songJson.events.push([note[0], [[note[2], note[3], note[4]]]]);
+						var array:Array<Dynamic> = [note[0], [[note[2], note[3], note[4]]]];
+						songJson.events.push(array);
 						notes.remove(note);
 						len = notes.length;
 					}

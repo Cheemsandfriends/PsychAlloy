@@ -455,7 +455,7 @@ class StoryMenuState extends MusicBeatState
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		var stringThing:Array<String> = [];
 		for (i in 0...leWeek.songs.length) {
-			stringThing.push(leWeek.songs[i][0]);
+			stringThing.push(leWeek.songs[i]);
 		}
 
 		txtTracklist.text = '';

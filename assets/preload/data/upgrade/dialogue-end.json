@@ -1,0 +1,250 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Huh.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Can't say I expected my afternoon to go this way, but I'm not complaining.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Skoob",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "You've got some serious skills there, Blue.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Mind if I shake both your hands? \\nSportsmanship and all that?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Spippidoobippido",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene7",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene8",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene9",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.11,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "...Oh.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "Wow, ok.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "Speep?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "I didn't know your girlfriend was some magic teleporty demon. Explains why I've never seen you two around, I guess.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "My suit identifies and assimilates tech if I touch it long enough.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "and apparently it does at least that first part with magic, too.\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "Point is that she absorbs... music energy, or funk, or something from people you beat in rap battles, like you just did me.\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.09,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "I could seriously use this kind of thing to deal with some real bad hombres around here...",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene10",
+			"text": "So if you just let me keep shaking your hand for a little longer...\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene11",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene12",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene13",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene14",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene15",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene16",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene17",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene17",
+			"text": "Welp.",
+			"expression": "soot"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene17",
+			"text": "Guess that's a no.",
+			"expression": "soot"
+		}
+	]
+}

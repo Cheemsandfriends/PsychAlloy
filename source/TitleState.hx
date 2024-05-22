@@ -28,7 +28,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -136,7 +136,7 @@ class TitleState extends MusicBeatState
 		#if CHECK_FOR_UPDATES
 		if(ClientPrefs.checkForUpdates && !closedState) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/Cheemsandfriends/PsychAlloy/master/gitVersion.txt?token=GHSAT0AAAAAABTZZJIQM4CJNGLQEPLE3B62YYPQ4WQ");
 
 			http.onData = function (data:String)
 			{
@@ -196,7 +196,8 @@ class TitleState extends MusicBeatState
 		{
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
-
+		
+		FlxG.mouse.useSystemCursor = true;
 		FlxG.mouse.visible = false;
 		#if FREEPLAY
 		MusicBeatState.switchState(new FreeplayState());
@@ -424,9 +425,19 @@ class TitleState extends MusicBeatState
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
 
+		var differentText:Array<String> = [];
 		for (i in firstArray)
 		{
-			swagGoodArray.push(i.split('--'));
+			i = i.trim();
+			if (i == "")
+			{
+				swagGoodArray.push(differentText);
+				differentText = [];
+			}
+			else
+			{
+				differentText.push(i);
+			}
 		}
 
 		return swagGoodArray;
@@ -582,24 +593,26 @@ class TitleState extends MusicBeatState
 
 	function createCoolText(textArray:Array<String>, ?offset:Float = 0)
 	{
+		if (textGroup.members.length > 0)
+			deleteCoolText();
 		for (i in 0...textArray.length)
 		{
-			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
-			money.screenCenter(X);
-			money.y += (i * 60) + 200 + offset;
-			if(credGroup != null && textGroup != null) {
-				credGroup.add(money);
-				textGroup.add(money);
-			}
+			addMoreText(textArray[i], offset);
 		}
 	}
 
-	function addMoreText(text:String, ?offset:Float = 0)
+	function addMoreText(text:String, ?offset:Float = 0, ?fadein:{time:Float})
 	{
 		if(textGroup != null && credGroup != null) {
-			var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
+			var smallfont = text.startsWith("smallfont:");
+			if (smallfont)
+			{
+				text.replace("smallfont:", "");
+				text.ltrim();
+			}
+			var coolText:Alphabet = new Alphabet(0, 0, text, true, false, 0.05, (smallfont) ? 0.1 : 1);
 			coolText.screenCenter(X);
-			coolText.y += (textGroup.length * 60) + 200 + offset;
+			coolText.y += (textGroup.length * (coolText.height / coolText.textSize)) + 200 + offset;
 			credGroup.add(coolText);
 			textGroup.add(coolText);
 		}
@@ -619,7 +632,6 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-
 		if(logoBl != null)
 			logoBl.animation.play('bump', true);
 
@@ -630,7 +642,6 @@ class TitleState extends MusicBeatState
 			else
 				gfDance.animation.play('danceLeft');
 		}
-
 		if(!closedState) {
 			sickBeats++;
 			switch (sickBeats)
@@ -641,16 +652,14 @@ class TitleState extends MusicBeatState
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 				case 2:
 					#if PSYCH_WATERMARKS
-					createCoolText(['Psych Engine by'], 15);
+					createCoolText(['FNF mod by'], 15);
 					#else
 					createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 					#end
 				// credTextShit.visible = true;
 				case 4:
 					#if PSYCH_WATERMARKS
-					addMoreText('Shadow Mario', 15);
-					addMoreText('RiverOaken', 15);
-					addMoreText('shubs', 15);
+					addMoreText('da MindChamber gang', 15);
 					#else
 					addMoreText('present');
 					#end
@@ -663,7 +672,7 @@ class TitleState extends MusicBeatState
 				// credTextShit.screenCenter();
 				case 6:
 					#if PSYCH_WATERMARKS
-					createCoolText(['Not associated', 'with'], -40);
+					createCoolText(['Kinda associated', 'with'], -40);
 					#else
 					createCoolText(['In association', 'with'], -40);
 					#end
@@ -679,7 +688,7 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = 'Shoutouts Tom Fulp';
 				// credTextShit.screenCenter();
 				case 10:
-					createCoolText([curWacky[0]]);
+					addMoreText(curWacky[0]);
 				// credTextShit.visible = true;
 				case 12:
 					addMoreText(curWacky[1]);
@@ -690,13 +699,13 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = "Friday";
 				// credTextShit.screenCenter();
 				case 14:
-					addMoreText('Friday');
+					addMoreText("settle");
 				// credTextShit.visible = true;
 				case 15:
-					addMoreText('Night');
+					addMoreText('into da');
 				// credTextShit.text += '\nNight';
 				case 16:
-					addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+					addMoreText('Metal'); // credTextShit.text += '\nFunkin';
 
 				case 17:
 					skipIntro();

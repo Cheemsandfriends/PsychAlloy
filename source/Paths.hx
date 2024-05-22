@@ -1,5 +1,6 @@
 package;
 
+import flxanimate.frames.FlxAnimateFrames;
 import animateatlas.AtlasFrameMaker;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
@@ -123,7 +124,6 @@ class Paths
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
-
 		if (currentLevel != null)
 		{
 			var levelPath:String = '';
@@ -260,6 +260,7 @@ class Paths
 			}
 
 			levelPath = getLibraryPathForce(key, 'shared');
+
 			if (FileSystem.exists(levelPath))
 				return File.getContent(levelPath);
 		}
@@ -301,9 +302,9 @@ class Paths
 			xmlExists = true;
 		}
 
-		return FlxAtlasFrames.fromSparrow((imageLoaded != null ? imageLoaded : image(key, library)), (xmlExists ? File.getContent(modsXml(key)) : file('images/$key.xml', library)));
+		return FlxAnimateFrames.fromSparrow((xmlExists ? File.getContent(modsXml(key)) : file('images/$key.xml', library)), (imageLoaded != null ? imageLoaded : image(key, library)));
 		#else
-		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
+		return FlxAnimateFrames.fromSparrow(file('images/$key.xml', library));
 		#end
 	}
 
@@ -322,6 +323,19 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 		#end
 	}
+	inline static public function getTextureAtlas(key:String, ?library:String = null)
+	{
+		var value = haxe.io.Path.directory(getPath('images/$key/Animation.json', TEXT, library));
+		var fr = FlxAnimateFrames.fromTextureAtlas(value);
+
+		@:privateAccess
+		for (parent in fr.usedGraphics)
+		{
+			localTrackedAssets.push(parent.assetsKey);
+		}
+		
+		return value;
+	}
 
 	inline static public function formatToSongPath(path:String) {
 		return path.toLowerCase().replace(' ', '-');
@@ -337,15 +351,15 @@ class Paths
 				var newBitmap:BitmapData = BitmapData.fromFile(modKey);
 				var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(newBitmap, false, modKey);
 				newGraphic.persist = true;
-				currentTrackedAssets.set(modKey, newGraphic);
+				currentTrackedAssets.set(key, newGraphic);
+				return newGraphic;
 			}
-			localTrackedAssets.push(modKey);
-			return currentTrackedAssets.get(modKey);
 		}
 		#end
 
 		var path = getPath('images/$key.png', IMAGE, library);
-		//trace(path);
+
+		
 		if (OpenFlAssets.exists(path, IMAGE)) {
 			if(!currentTrackedAssets.exists(path)) {
 				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);

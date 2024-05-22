@@ -1,5 +1,9 @@
 package;
 
+import flixel.graphics.FlxGraphic;
+import flixel.tweens.FlxTween;
+import openfl.filters.DropShadowFilter;
+import flxanimate.frames.FlxAnimateFrames;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.text.FlxTypeText;
@@ -49,15 +53,24 @@ typedef DialogueLine = {
 	var expression:Null<String>;
 	var text:Null<String>;
 	var boxState:Null<String>;
+	@:optional var background:Null<String>;
 	var speed:Null<Float>;
-	var sound:Null<String>;
+	@:optional var sound:Null<String>;
 }
 
-class DialogueCharacter extends FlxSprite
+typedef Background = 
+{
+	var path:String;
+	var duration:Int;
+}
+
+class DialogueCharacter extends FlxFilteredSprite
 {
 	private static var IDLE_SUFFIX:String = '-IDLE';
 	public static var DEFAULT_CHARACTER:String = 'bf';
 	public static var DEFAULT_SCALE:Float = 0.7;
+
+	var rawImg:Bool = false;
 
 	public var jsonFile:DialogueCharacterFile = null;
 	#if (haxe >= "4.0.0")
@@ -71,6 +84,7 @@ class DialogueCharacter extends FlxSprite
 	public var curCharacter:String = 'bf';
 	public var skiptimer = 0;
 	public var skipping = 0;
+	
 	public function new(x:Float = 0, y:Float = 0, character:String = null)
 	{
 		super(x, y);
@@ -79,11 +93,43 @@ class DialogueCharacter extends FlxSprite
 		this.curCharacter = character;
 
 		reloadCharacterJson(character);
-		frames = Paths.getSparrowAtlas('dialogue/' + jsonFile.image);
+
+		reloadFrames();
+
 		reloadAnimations();
+		filters = [new DropShadowFilter(4, 75, 0, 1, 25)];
 
 		antialiasing = ClientPrefs.globalAntialiasing;
 		if(jsonFile.no_antialiasing == true) antialiasing = false;
+	}
+
+	public function reloadFrames()
+	{
+		if (!jsonFile.image.endsWith("/"))
+			frames = Paths.getSparrowAtlas('dialogue/' + jsonFile.image);
+		else
+		{
+			rawImg = true;
+			var p = 'dialogue/' + jsonFile.image.substring(0, jsonFile.image.length - 1);
+			
+			var fr = new FlxAtlasFrames(null);
+			var emotions = [];
+
+			for (animation in jsonFile.animations)
+			{
+				emotions.push(animation.anim);
+			}
+			if (emotions.length < 1)
+				emotions.push("neutral");
+
+			for (emotion in emotions)
+			{
+				var imgFrame = Paths.returnGraphic(p + "/" + emotion).imageFrame;
+				imgFrame.frame.name = emotion;
+				fr.pushFrame(imgFrame.frame);
+			}
+			frames = fr;
+		}
 	}
 
 	public function reloadCharacterJson(character:String) {
@@ -121,27 +167,34 @@ class DialogueCharacter extends FlxSprite
 	}
 
 	public function playAnim(animName:String = null, playIdle:Bool = false) {
-		var leAnim:String = animName;
-		if(animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
-			var arrayAnims:Array<String> = [];
-			for (anim in dialogueAnimations) {
-				arrayAnims.push(anim.anim);
+		if (rawImg)
+		{
+			animation.frameIndex = frames.getFrameIndex(frames.getByName(animName));
+		}
+		else
+		{
+			var leAnim:String = animName;
+			if(animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
+				var arrayAnims:Array<String> = [];
+				for (anim in dialogueAnimations) {
+					arrayAnims.push(anim.anim);
+				}
+				if(arrayAnims.length > 0) {
+					leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length-1)];
+				}
 			}
-			if(arrayAnims.length > 0) {
-				leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length-1)];
+
+			if(dialogueAnimations.exists(leAnim) &&
+			(dialogueAnimations.get(leAnim).loop_name == null ||
+			dialogueAnimations.get(leAnim).loop_name.length < 1 ||
+			dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name)) {
+				playIdle = true;
 			}
+			animation.play(playIdle ? leAnim + IDLE_SUFFIX : leAnim, false);
 		}
 
-		if(dialogueAnimations.exists(leAnim) &&
-		(dialogueAnimations.get(leAnim).loop_name == null ||
-		dialogueAnimations.get(leAnim).loop_name.length < 1 ||
-		dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name)) {
-			playIdle = true;
-		}
-		animation.play(playIdle ? leAnim + IDLE_SUFFIX : leAnim, false);
-
-		if(dialogueAnimations.exists(leAnim)) {
-			var anim:DialogueAnimArray = dialogueAnimations.get(leAnim);
+		if(dialogueAnimations.exists(animName)) {
+			var anim:DialogueAnimArray = dialogueAnimations.get(animName);
 			if(playIdle) {
 				offset.set(anim.idle_offsets[0], anim.idle_offsets[1]);
 				//trace('Setting idle offsets: ' + anim.idle_offsets);
@@ -151,7 +204,7 @@ class DialogueCharacter extends FlxSprite
 			}
 		} else {
 			offset.set(0, 0);
-			trace('Offsets not found! Dialogue character is badly formatted, anim: ' + leAnim + ', ' + (playIdle ? 'idle anim' : 'loop anim'));
+			trace('Offsets not found! Dialogue character is badly formatted, anim: ' + animName + ', ' + (playIdle ? 'idle anim' : 'loop anim'));
 		}
 	}
 
@@ -170,9 +223,16 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public var finishThing:Void->Void;
 	public var nextDialogueThing:Void->Void = null;
 	public var skipDialogueThing:Void->Void = null;
+
+	var backgrounds:Array<FlxGraphic> = [];
 	var bgFade:FlxSprite = null;
 	var box:FlxSprite;
+
+	var bg:FlxSprite;
+	var bgPath:String = '';
 	var textToType:String = '';
+
+	var arrows:Array<FlxSprite> = [];
 
 	var arrayCharacters:Array<DialogueCharacter> = [];
 
@@ -199,24 +259,60 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		bgFade.alpha = 0;
 		add(bgFade);
 
+		bg = new FlxSprite();
+		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.scrollFactor.set();
+		add(bg);
+
+		for (i in 0...2)
+		{
+			var arrow = new FlxSprite();
+			arrow.loadGraphic(Paths.image("dialogue/blurarrow"));
+			
+			var arrowPress = Paths.image("dialogue/redarrow");
+			if (arrowPress != null)
+			{
+				var arrowFrame = arrowPress.imageFrame.frame;
+
+				arrowFrame.offset.set(0, 250);
+				
+				arrow.frames.pushFrame(arrowFrame);
+			}
+			arrow.setGraphicSize(arrow.width * 0.2);
+			arrow.antialiasing = ClientPrefs.globalAntialiasing;
+			arrow.updateHitbox();
+
+			arrow.screenCenter(Y);
+			arrow.x = (FlxG.width - arrow.width) * i;
+
+			arrow.flipX = i == 1;
+
+			add(arrow);
+			arrows.push(arrow);
+		}
+
 		this.dialogueList = dialogueList;
 		spawnCharacters();
+		loadBGs();
 
-		box = new FlxSprite(70, 370);
-		box.frames = Paths.getSparrowAtlas('speech_bubble');
+		box = new FlxSprite(175, 200);
+		box.frames = Paths.getSparrowAtlas('ConVoBox');
 		box.scrollFactor.set();
 		box.antialiasing = ClientPrefs.globalAntialiasing;
-		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
-		box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
-		box.animation.addByPrefix('angry', 'AHH speech bubble', 24);
-		box.animation.addByPrefix('angryOpen', 'speech bubble loud open', 24, false);
-		box.animation.addByPrefix('center-normal', 'speech bubble middle', 24);
-		box.animation.addByPrefix('center-normalOpen', 'Speech Bubble Middle Open', 24, false);
-		box.animation.addByPrefix('center-angry', 'AHH Speech Bubble middle', 24);
-		box.animation.addByPrefix('center-angryOpen', 'speech bubble Middle loud open', 24, false);
+		
+		box.animation.addByPrefix('normalOpen', 'ConvoBox', 24, false);
+		box.animation.addByIndices("normal", "ConvoBox", [box.frames.numFrames - 1], "");
+		box.animation.addByPrefix('angryOpen', 'ConvoBox', 24, false);
+		box.animation.addByIndices("angry", "ConvoBox", [box.frames.numFrames - 1], "");
+		box.animation.addByPrefix('center-normalOpen', 'ConvoBox', 24, false);
+		box.animation.addByIndices("center-normal", "ConvoBox", [box.frames.numFrames - 1], "");
+		box.animation.addByPrefix('center-angryOpen', 'ConvoBox', 24, false);
+		box.animation.addByIndices("center-angry", "ConvoBox", [box.frames.numFrames - 1], "");
+
 		box.animation.play('normal', true);
 		box.visible = false;
-		box.setGraphicSize(Std.int(box.width * 0.9));
+		var scale = 2;
+		box.setGraphicSize(Std.int(box.width * (1.1 * scale)), box.height * ( .5 * scale));
 		box.updateHitbox();
 		add(box);
 
@@ -240,12 +336,13 @@ class DialogueBoxPsych extends FlxSpriteGroup
 			if(dialogueList.dialogue[i] != null) {
 				var charToAdd:String = dialogueList.dialogue[i].portrait;
 				if(!charsMap.exists(charToAdd) || !charsMap.get(charToAdd)) {
-					charsMap.set(charToAdd, true);
+					if (charToAdd != "none")
+						charsMap.set(charToAdd, true);
 				}
 			}
 		}
 
-		for (individualChar in charsMap.keys()) {
+		for (individualChar in charsMap.keys()) { 
 			var x:Float = LEFT_CHAR_X;
 			var y:Float = DEFAULT_CHAR_Y;
 			var char:DialogueCharacter = new DialogueCharacter(x + offsetPos, y, individualChar);
@@ -276,6 +373,43 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		}
 	}
 
+	function loadBGs()
+	{
+		var bgs:Map<String, FlxGraphic> = [];
+		
+		
+		for (i in 0...dialogueList.dialogue.length)
+		{
+			var curDialogue = dialogueList.dialogue[i];
+			if (curDialogue.background == null)
+			{
+				backgrounds.push(null);
+				continue;
+			}
+			var path = 'dialogue/scenes/' + curDialogue.background;
+			var gp = null;
+
+			if (bgs.exists(path))
+				gp = bgs[path];
+			else
+				gp = Paths.returnGraphic(path);
+
+			gp.incrementUseCount();
+
+			backgrounds.push(gp);
+		}
+	}
+
+	public function disposeBGs()
+	{
+		for (bg in backgrounds)
+		{
+			if (bg != null)
+				bg.destroy();
+		}
+		backgrounds = null;
+	}
+
 	public static var DEFAULT_TEXT_X = 90;
 	public static var DEFAULT_TEXT_Y = 430;
 	var scrollSpeed = 4500;
@@ -292,17 +426,39 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		if(!dialogueEnded) {
 			bgFade.alpha += 0.5 * elapsed;
 			if(bgFade.alpha > 0.5) bgFade.alpha = 0.5;
+			var right = false;
+			if(PlayerSettings.player1.controls.UI_LEFT || PlayerSettings.player1.controls.UI_RIGHT) 
+			{
+				var progress = PlayerSettings.player1.controls.UI_RIGHT;
+				
+				var arrow = (!progress) ? arrows[0] : arrows[1];
+				
+				arrow.animation.frameIndex = 1;
+			}
+			if (PlayerSettings.player1.controls.ACCEPT)
+			{
+				right = true;
+				daText.typingSpeed = 0;
+				currentText = dialogueList.dialogue.length;
+			}
+			if (PlayerSettings.player1.controls.UI_RIGHT_R)
+				right = true;
+			if(PlayerSettings.player1.controls.UI_LEFT_R || right) 
+			{
+				var progress = right;
 
-			if(PlayerSettings.player1.controls.ACCEPT) {
+				var arrow = (!progress) ? arrows[0] : arrows[1];
+				
+				arrow.animation.frameIndex = 0;
+				if (!progress)
+					currentText -= 2;
+
 				if(!daText.finishedText) {
 					if(daText != null) {
-						daText.killTheTimer();
-						daText.kill();
-						remove(daText);
-						daText.destroy();
+						daText.typingSpeed = 0;
 					}
-					daText = new Alphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, textToType, false, true, 0.0, 0.7);
-					add(daText);
+					if (!progress)
+						currentText += 2;
 					
 					if(skipDialogueThing != null) {
 						skipDialogueThing();
@@ -327,8 +483,17 @@ class DialogueBoxPsych extends FlxSpriteGroup
 					daText = null;
 					updateBoxOffsets(box);
 					FlxG.sound.music.fadeOut(1, 0);
+					FlxTween.tween(this, {alpha: 0}, 1, {onComplete: (_) -> disposeBGs()});
 				} else {
-					startNextDialog();
+					if (currentText >= 0)
+						startNextDialog();
+					else
+					{
+						FlxG.sound.play(Paths.sound('cancelMenu'));
+
+						if (!progress)
+							currentText += 2;
+					}
 				}
 				FlxG.sound.play(Paths.sound('dialogueClose'));
 			} else if(daText.finishedText) {
@@ -463,6 +628,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 			}
 		}
 
+		
 		var character:Int = 0;
 		box.visible = true;
 		for (i in 0...arrayCharacters.length) {
@@ -478,25 +644,29 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		if(character != lastCharacter) {
 			box.animation.play(centerPrefix + boxType + 'Open', true);
 			updateBoxOffsets(box);
-			box.flipX = (lePosition == 'left');
+			// box.flipX = (lePosition == 'left');
 		} else if(boxType != lastBoxType) {
 			box.animation.play(centerPrefix + boxType, true);
 			updateBoxOffsets(box);
 		}
+		updateBackground(curDialogue.background);
 		lastCharacter = character;
+		arrayCharacters[character].visible = true;
 		lastBoxType = boxType;
 
-		if(daText != null) {
-			daText.killTheTimer();
-			daText.kill();
-			remove(daText);
-			daText.destroy();
-		}
-
 		textToType = curDialogue.text;
-		Alphabet.setDialogueSound(curDialogue.sound);
-		daText = new Alphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, textToType, false, true, curDialogue.speed, 0.7);
-		add(daText);
+
+		if(daText != null) {
+			daText.y = DEFAULT_TEXT_Y;
+			daText.changeText(textToType, curDialogue.speed);
+		}
+		else
+		{
+			if (curDialogue.sound != null)
+				Alphabet.setDialogueSound(curDialogue.sound);
+			daText = new Alphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, textToType, false, true, curDialogue.speed, 0.7);
+			add(daText);
+		}
 
 		var char:DialogueCharacter = arrayCharacters[character];
 		if(char != null) {
@@ -508,8 +678,20 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				char.animation.curAnim.frameRate = rate;
 			}
 		}
+		
+		
 		currentText++;
-
+		if (curDialogue.portrait == "none")
+		{
+			box.visible = false;
+			char.visible = false;
+			daText.visible = false;
+		}
+		else
+		{
+			box.visible = true;
+			daText.visible = true;
+		}
 		if(nextDialogueThing != null) {
 			nextDialogueThing();
 		}
@@ -528,14 +710,32 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public static function updateBoxOffsets(box:FlxSprite) { //Had to make it static because of the editors
 		box.centerOffsets();
 		box.updateHitbox();
-		if(box.animation.curAnim.name.startsWith('angry')) {
-			box.offset.set(50, 65);
-		} else if(box.animation.curAnim.name.startsWith('center-angry')) {
-			box.offset.set(50, 30);
-		} else {
-			box.offset.set(10, 0);
-		}
+		// if(box.animation.curAnim.name.startsWith('angry')) {
+		// 	box.offset.set(50, 65);
+		// } else if(box.animation.curAnim.name.startsWith('center-angry')) {
+		// 	box.offset.set(50, 30);
+		// } else {
+		// }
+		box.offset.set(10, 0);
 		
-		if(!box.flipX) box.offset.y += 10;
+		// if(!box.flipX) box.offset.y += 10;
+	}
+	public function updateBackground(path:Null<String>)
+	{	
+		var image = backgrounds[currentText];
+
+		if (image == bg.graphic)
+			return;
+
+		if (image == null)
+		{
+			bg.makeGraphic(1, 1, 0);
+			return;
+		}
+		bg.loadGraphic(image);
+		bg.setGraphicSize(FlxG.width);
+		bg.updateHitbox();
+		bg.screenCenter();
+
 	}
 }

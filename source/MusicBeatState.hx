@@ -26,17 +26,18 @@ class MusicBeatState extends FlxUIState
 	private var curDecBeat:Float = 0;
 	private var controls(get, never):Controls;
 
+	var addGrp:Map<FlxBasic, Array<FlxBasic>> = [];
+
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
 	override function create() {
-		var skip:Bool = FlxTransitionableState.skipNextTransOut;
+		var skip:Bool = FlxTransitionableState.skipNextTransIn;
 		super.create();
-
 		if(!skip) {
 			openSubState(new CustomFadeTransition(0.7, true));
 		}
-		FlxTransitionableState.skipNextTransOut = false;
+		FlxTransitionableState.skipNextTransIn = false;
 	}
 
 	override function update(elapsed:Float)
@@ -69,6 +70,7 @@ class MusicBeatState extends FlxUIState
 	private function updateSection():Void
 	{
 		if(stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
+		if (stepsToDo == 0) return;
 		while(curStep >= stepsToDo)
 		{
 			curSection++;
@@ -77,7 +79,28 @@ class MusicBeatState extends FlxUIState
 			sectionHit();
 		}
 	}
+	override public function add(Object:FlxBasic):FlxBasic 
+	{
+		var thing = super.add(Object);
+		var grp = addGrp.get(Object);
+		if (grp != null)
+		{
+			for (member in grp)
+			{
+				add(member);
+			}
+		}
 
+		addGrp.remove(Object);
+		return thing;
+	}
+	public function addInFront(Object:FlxBasic, Object2:FlxBasic)
+	{
+		var array = addGrp.get(Object2);
+		if (array == null) array = [];
+		array.push(Object);
+		addGrp.set(Object2, array);
+	}
 	private function rollbackSection():Void
 	{
 		if(curStep < 0) return;
@@ -116,28 +139,21 @@ class MusicBeatState extends FlxUIState
 
 	public static function switchState(nextState:FlxState) {
 		// Custom made Trans in
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
-		if(!FlxTransitionableState.skipNextTransIn) {
+		var curState:FlxState = FlxG.state;
+		var leState:MusicBeatState = cast curState;
+		if(!FlxTransitionableState.skipNextTransOut) {
 			leState.openSubState(new CustomFadeTransition(0.6, false));
-			if(nextState == FlxG.state) {
-				CustomFadeTransition.finishCallback = function() {
-					FlxG.resetState();
-				};
-			} else {
-				CustomFadeTransition.finishCallback = function() {
-					FlxG.switchState(#if (flixel>="5.0.0")()->nextState #else nextState#end);
-				};
-				//trace('changed state');
-			}
+			CustomFadeTransition.finishCallback = function() {
+				(nextState == curState) ? FlxG.resetState() : FlxG.switchState(#if (flixel>="6.0.0")()->nextState #else nextState#end);
+			};
 			return;
 		}
-		FlxTransitionableState.skipNextTransIn = false;
-		FlxG.switchState(#if (flixel>="5.0.0")()->nextState #else nextState#end);
+		FlxTransitionableState.skipNextTransOut = false;
+		FlxG.switchState(#if (flixel>="6.0.0")()->nextState #else nextState#end);
 	}
 
 	public static function resetState() {
-		MusicBeatState.switchState(FlxG.state);
+		FlxG.resetState();
 	}
 
 	public static function getState():MusicBeatState {
@@ -166,6 +182,6 @@ class MusicBeatState extends FlxUIState
 	{
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
-		return val == null ? 4 : val;
+		return [0.0,null].indexOf(val) != -1 ? 4 : val;
 	}
 }

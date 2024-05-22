@@ -45,9 +45,8 @@ class GameOverSubstate extends MusicBeatSubstate
 	public function new(x:Float, y:Float, camX:Float, camY:Float)
 	{
 		super();
-
 		PlayState.instance.setOnLuas('inGameOver', true);
-
+		
 		Conductor.songPosition = 0;
 
 		boyfriend = new Boyfriend(x, y, characterName);
@@ -94,29 +93,26 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.seenCutscene = false;
 
 			WeekData.loadTheFirstEnabledMod();
-			if (PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
-			else
-				MusicBeatState.switchState(new FreeplayState());
+			
+			MusicBeatState.switchState(new MainMenuState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
 		}
 
-		if (boyfriend.animation.curAnim.name == 'firstDeath')
+		if (boyfriend.curAnimName == 'firstDeath')
 		{
-			if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready)
+			if(boyfriend.getCurAnimFrame() >= 12 && !isFollowingAlready)
 			{
 				FlxG.camera.follow(camFollowPos, LOCKON, 1);
 				updateCamera = true;
 				isFollowingAlready = true;
 			}
 
-			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
+			if (boyfriend.isFinishedAnim() && !playingDeathSound)
 			{
 				if (PlayState.SONG.stage == 'tank')
 				{
-					playingDeathSound = true;
 					coolStartDeath(0.2);
 					
 					var exclude:Array<Int> = [];
@@ -155,6 +151,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	function coolStartDeath(?volume:Float = 1):Void
 	{
+		playingDeathSound = true;
 		FlxG.sound.playMusic(Paths.music(loopSoundName), volume);
 	}
 

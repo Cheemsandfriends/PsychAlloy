@@ -1,0 +1,68 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Man, this really is fun.",
+			"expression": "excite"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "I can see why you walk around to plane crashes and battlefields and stuff and make people rap battle you.",
+			"expression": "excite"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Bippity borp",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "We can do one more, but I wanna try \\nsomething.",
+			"expression": "excite"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "That cool with you?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Skoot",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Sick.",
+			"expression": "excite"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Let's kick it.",
+			"expression": "talk"
+		}
+	]
+}

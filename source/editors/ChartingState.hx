@@ -25,7 +25,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -53,7 +53,7 @@ import flash.media.Sound;
 
 using StringTools;
 
-@:access(flixel.system.FlxSound._sound)
+@:access(flixel.sound.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
 
 class ChartingState extends MusicBeatState
@@ -65,6 +65,7 @@ class ChartingState extends MusicBeatState
 		'Hey!',
 		'Hurt Note',
 		'GF Sing',
+		'Frozen Note',
 		'No Animation'
 	];
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
@@ -89,7 +90,8 @@ class ChartingState extends MusicBeatState
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
-		['Set Property', "Value 1: Variable name\nValue 2: New value"]
+		['Set Property', "Value 1: Variable name\nValue 2: New value"],
+		['Alloy Shoot', "Alloy shoots and if you miss then everything becomes ice"]
 	];
 
 	var _file:FileReference;
@@ -517,6 +519,7 @@ class ChartingState extends MusicBeatState
 		}
 		#end
 
+		characters.unshift("none");
 		var player1DropDown = new FlxUIDropDownMenuCustom(10, stepperSpeed.y + 45, FlxUIDropDownMenuCustom.makeStrIdLabelArray(characters, true), function(character:String)
 		{
 			_song.player1 = characters[Std.parseInt(character)];
@@ -1657,8 +1660,8 @@ class ChartingState extends MusicBeatState
 				StageData.loadDirectory(_song);
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
-
-			if(curSelectedNote != null && curSelectedNote[1] > -1) {
+			var sus:Int = (curSelectedNote != null) ? Std.parseInt(Std.string(curSelectedNote[1])) : -1;
+			if(sus > -1) {
 				if (FlxG.keys.justPressed.E)
 				{
 					changeNoteSustain(Conductor.stepCrochet);
@@ -2066,13 +2069,12 @@ class ChartingState extends MusicBeatState
 	function reloadGridLayer() {
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 9, Std.int(GRID_SIZE * getSectionBeats() * 4 * zoomList[curZoom]));
-
 		#if desktop
 		if(FlxG.save.data.chart_waveformInst || FlxG.save.data.chart_waveformVoices) {
 			updateWaveform();
 		}
 		#end
-
+		
 		var leHeight:Int = Std.int(gridBG.height);
 		var foundNextSec:Bool = false;
 		if(sectionStartTime(1) <= FlxG.sound.music.length)
@@ -2142,6 +2144,7 @@ class ChartingState extends MusicBeatState
 		var steps:Int = Math.round(getSectionBeats() * 4);
 		var st:Float = sectionStartTime();
 		var et:Float = st + (Conductor.stepCrochet * steps);
+		
 
 		if (FlxG.save.data.chart_waveformInst) {
 			var sound:FlxSound = FlxG.sound.music;
@@ -2619,8 +2622,8 @@ class ChartingState extends MusicBeatState
 
 	function setupNoteData(i:Array<Dynamic>, isNextSection:Bool):Note
 	{
-		var daNoteInfo = i[1];
-		var daStrumTime = i[0];
+		var daNoteInfo:Int = Std.parseInt(Std.string(i[1]));
+		var daStrumTime:Dynamic = i[0];
 		var daSus:Dynamic = i[2];
 
 		var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, null, true);
@@ -3010,7 +3013,7 @@ class ChartingState extends MusicBeatState
 		var val:Null<Float> = null;
 		
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
-		return val != null ? val : 4;
+		return ([0.0,null].indexOf(val) == -1) ? val : 4;
 	}
 }
 

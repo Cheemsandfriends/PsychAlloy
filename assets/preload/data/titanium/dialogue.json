@@ -1,0 +1,76 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Alright, not gonna lie.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "I'm kinda getting into this!",
+			"expression": "excite"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Skibidi bop dadoo",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Still can't understand you, though.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.4,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "....",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "Anyway, I think we should take it up a notch.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "What do you say?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"text": "Eebodeep skort",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"text": "That's what I thought.",
+			"expression": "talk"
+		}
+	]
+}

@@ -1,0 +1,22 @@
+{
+	"animations": null,
+	"camera_position": [
+		0,
+		0
+	],
+	"flip_x": true,
+	"healthbar_colors": [
+		49,
+		176,
+		209
+	],
+	"healthicon": "bf",
+	"image": "characters/tzenbf",
+	"no_antialiasing": false,
+	"position": [
+		0,
+		350
+	],
+	"scale": 1,
+	"sing_duration": 4
+}

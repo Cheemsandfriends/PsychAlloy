@@ -1,5 +1,7 @@
 package;
 
+import openfl.Assets;
+import Character.CharacterFile;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -10,34 +12,91 @@ using StringTools;
 class Boyfriend extends Character
 {
 	public var startedDeath:Bool = false;
-
-	public function new(x:Float, y:Float, ?char:String = 'bf')
+	public var alloyShootEvent:Bool = false;
+	public var dodged(default, set):Bool;
+	public var frozen(get, null):Bool;
+	public var frozenNoteCount(default, set):Int;
+	var _gotframes:Bool = false;
+	var _sufix:String = "";
+	public function new(x:Float = 0, y:Float = 0, ?char:String = 'bf')
 	{
 		super(x, y, char, true);
 	}
-
+	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) 
+	{
+		if (frozen)
+			AnimName = AnimName.replace("miss", "").split("-")[0];
+		super.playAnim(AnimName, Force, Reversed, Frame);
+	}
 	override function update(elapsed:Float)
 	{
-		if (!debugMode && animation.curAnim != null)
+		if (!debugMode && curAnimName != null)
 		{
-			if (animation.curAnim.name.startsWith('sing'))
+			if (curAnimName.startsWith('sing'))
 			{
 				holdTimer += elapsed;
 			}
 			else
 				holdTimer = 0;
 
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+			if (curAnimName.endsWith('miss') && isFinishedAnim() && !debugMode)
 			{
 				playAnim('idle', true, false, 10);
 			}
 
-			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && startedDeath)
+			if (curAnimName == 'firstDeath' && isFinishedAnim() && startedDeath)
 			{
 				playAnim('deathLoop');
 			}
-		}
 
+			if (curAnimName == 'attack' && isFinishedAnim())
+			{
+				playAnim("pre-attack");
+				specialAnim = true;
+			}
+
+			if (!startedDeath && alloyShootEvent)
+			{
+				if (!dodged && FlxG.keys.justPressed.SPACE)
+				{
+					dodged = true;
+				}
+				
+				if (dodged && (FlxG.keys.released.SPACE || isFinishedAnim()))
+				{
+					dodged = false;
+					specialAnim = false;
+					dance();
+				}
+			}
+		}
 		super.update(elapsed);
+	}
+	override function dance()
+	{
+		if (!frozen)
+			super.dance();
+	}
+	function get_frozen()
+	{
+		return curCharacter.endsWith("-ice");
+	}
+	function set_dodged(dodge:Bool)
+	{
+		if (frozen)
+			return false;
+
+		dodge ? playAnim("dodge", true): dance();
+		specialAnim = dodge;
+		return dodged = dodge;
+	}
+	function set_frozenNoteCount(value:Int)
+	{
+		frozenNoteCount = (frozen) ? value : 0;
+
+		if (frozenNoteCount == 20)
+			frozen = false;
+
+		return value;
 	}
 }

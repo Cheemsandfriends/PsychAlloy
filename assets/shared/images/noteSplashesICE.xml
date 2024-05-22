@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="noteSplashesICE.png">
+	<!-- Created with Adobe Animate version 22.0.3.179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="blue_ice_splash0000" x="0" y="0" width="265" height="164" frameX="-57" frameY="-2" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0001" x="265" y="0" width="295" height="168" frameX="-39" frameY="0" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0002" x="560" y="0" width="349" height="176" frameX="-22" frameY="-9" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0003" x="909" y="0" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0004" x="909" y="0" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0005" x="1299" y="0" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0006" x="1299" y="0" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0007" x="1689" y="0" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0008" x="1689" y="0" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0009" x="1987" y="0" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0010" x="1987" y="0" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0011" x="2010" y="0" width="0" height="0" frameX="816" frameY="305" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="blue_ice_splash0012" x="2010" y="0" width="0" height="0" frameX="816" frameY="305" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0000" x="0" y="176" width="265" height="164" frameX="-57" frameY="-2" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0001" x="265" y="176" width="295" height="168" frameX="-39" frameY="0" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0002" x="560" y="176" width="347" height="176" frameX="-23" frameY="-9" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0003" x="907" y="176" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0004" x="907" y="176" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0005" x="1297" y="176" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0006" x="1297" y="176" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0007" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0008" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0009" x="1687" y="176" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0010" x="1687" y="176" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0011" x="1710" y="176" width="0" height="0" frameX="1004" frameY="289" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="green_ice_splash0012" x="1710" y="176" width="0" height="0" frameX="1004" frameY="289" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0000" x="1710" y="176" width="265" height="164" frameX="-57" frameY="-2" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0001" x="0" y="352" width="295" height="168" frameX="-39" frameY="0" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0002" x="295" y="352" width="349" height="176" frameX="-22" frameY="-9" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0003" x="644" y="352" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0004" x="644" y="352" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0005" x="390" y="528" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0006" x="390" y="528" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0007" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0008" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0009" x="1034" y="352" width="22" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0010" x="1034" y="352" width="22" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0011" x="1056" y="352" width="0" height="0" frameX="638" frameY="281" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="purple_ice_splash0012" x="1056" y="352" width="0" height="0" frameX="638" frameY="281" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0000" x="1056" y="352" width="265" height="164" frameX="-57" frameY="-2" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0001" x="1321" y="352" width="295" height="168" frameX="-39" frameY="0" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0002" x="1616" y="352" width="349" height="176" frameX="-22" frameY="-9" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0003" x="0" y="528" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0004" x="0" y="528" width="390" height="175" frameX="-7" frameY="-48" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0005" x="390" y="528" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0006" x="390" y="528" width="390" height="157" frameX="0" frameY="-97" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0007" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0008" x="780" y="528" width="298" height="76" frameX="-19" frameY="-156" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0009" x="1078" y="528" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0010" x="1078" y="528" width="23" height="22" frameX="-257" frameY="-196" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0011" x="1101" y="528" width="0" height="0" frameX="1198" frameY="281" frameWidth="397" frameHeight="254"/>
+	<SubTexture name="red_ice_splash0012" x="1101" y="528" width="0" height="0" frameX="1198" frameY="281" frameWidth="397" frameHeight="254"/>
+</TextureAtlas>

@@ -1,5 +1,6 @@
 package openfl.display;
 
+import openfl.display3D.Context3D;
 import haxe.Timer;
 import openfl.events.Event;
 import openfl.text.TextField;

@@ -14,7 +14,7 @@ using StringTools;
 typedef WeekFile =
 {
 	// JSON variables
-	var songs:Array<Dynamic>;
+	var songs:Array<String>;
 	var weekCharacters:Array<String>;
 	var weekBackground:String;
 	var weekBefore:String;
@@ -34,7 +34,7 @@ class WeekData {
 	public var folder:String = '';
 	
 	// JSON variables
-	public var songs:Array<Dynamic>;
+	public var songs:Array<String>;
 	public var weekCharacters:Array<String>;
 	public var weekBackground:String;
 	public var weekBefore:String;
@@ -51,7 +51,7 @@ class WeekData {
 
 	public static function createWeekFile():WeekFile {
 		var weekFile:WeekFile = {
-			songs: [["Bopeebo", "dad", [146, 113, 253]], ["Fresh", "dad", [146, 113, 253]], ["Dad Battle", "dad", [146, 113, 253]]],
+			songs: ["Boopebo", "Fresh", "Dad-Battle"],
 			weekCharacters: ['dad', 'bf', 'gf'],
 			weekBackground: 'stage',
 			weekBefore: 'tutorial',

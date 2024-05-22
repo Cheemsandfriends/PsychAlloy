@@ -16,6 +16,10 @@ class FlashingState extends MusicBeatState
 	public static var leftState:Bool = false;
 
 	var warnText:FlxText;
+
+	// if you want to modify this function, it should be ez, but I recommend using a `function()` instead of `() ->` if you wanna do more lines than this lmao.
+	var func = (tmr:Dynamic) -> MusicBeatState.switchState(new TitleState());
+	var duration = 1;
 	override function create()
 	{
 		super.create();
@@ -43,22 +47,18 @@ class FlashingState extends MusicBeatState
 				leftState = true;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
+
+				ClientPrefs.flashing = back;
+				ClientPrefs.saveSettings();
+
+				FlxG.sound.play(Paths.sound('${(controls.ACCEPT) ? "confirm" : "cancel"}Menu'));
+				
 				if(!back) {
-					ClientPrefs.flashing = false;
-					ClientPrefs.saveSettings();
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
-						new FlxTimer().start(0.5, function (tmr:FlxTimer) {
-							MusicBeatState.switchState(new TitleState());
-						});
+					FlxFlicker.flicker(warnText, duration, 0.1, false, true, function(flk:FlxFlicker) {
+						new FlxTimer().start(0.5, func);
 					});
 				} else {
-					FlxG.sound.play(Paths.sound('cancelMenu'));
-					FlxTween.tween(warnText, {alpha: 0}, 1, {
-						onComplete: function (twn:FlxTween) {
-							MusicBeatState.switchState(new TitleState());
-						}
-					});
+					FlxTween.tween(warnText, {alpha: 0}, duration, {onComplete: func});
 				}
 			}
 		}

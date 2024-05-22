@@ -1,0 +1,157 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene1",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene2",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene3",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene3",
+			"text": "Beep",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene5",
+			"text": "Oh.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene5",
+			"text": "So you don't wanna murder me.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "Who are you and what are you doing here? I could have killed you just now.\r\n",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "Skedepoba",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.5,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "....",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "Boop",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "I have no idea what you're saying.\r\n",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "Pabibo",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "You're holding a microphone...\r\n",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "And that chick's sitting on a massive speaker.\r\n",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "You don't want me to sing, do you?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "Bepa bee",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.5,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene6",
+			"text": "....",
+			"expression": "talk"
+		}
+	]
+}

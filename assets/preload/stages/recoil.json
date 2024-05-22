@@ -1,0 +1,9 @@
+{
+	"directory": "weekalloy",
+	"defaultZoom": 0.8,
+	"isPixelStage": false,
+
+	"boyfriend": [970, 100],
+	"girlfriend": [480, 130],
+	"opponent": [100, 100]
+}

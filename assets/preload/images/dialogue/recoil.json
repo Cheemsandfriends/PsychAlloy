@@ -1,0 +1,25 @@
+{
+	"animations": [
+		{
+			"idle_name": "neutral",
+			"loop_name": "neutral",
+			"idle_offsets": [
+				0,
+				0
+			],
+			"anim": "neutral",
+			"loop_offsets": [
+				0,
+				0
+			]
+		}
+	],
+	"position": [
+		7,
+		40
+	],
+	"no_antialiasing": false,
+	"image": "recoil/",
+	"scale": 1.25,
+	"dialogue_pos": "left"
+}

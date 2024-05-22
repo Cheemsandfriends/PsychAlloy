@@ -1,12 +1,13 @@
 package;
 
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flash.media.Sound;
 
 using StringTools;
@@ -46,12 +47,28 @@ class Alphabet extends FlxSpriteGroup
 	public var finishedText:Bool = false;
 	public var typed:Bool = false;
 
-	public var typingSpeed:Float = 0.05;
+	public var typingSpeed(default, set):Float = 0.05;
+
+	var charFrames:FlxAtlasFrames;
+
+	function set_typingSpeed(value:Float)
+	{
+		if (typingSpeed != value)
+		{
+			typingSpeed = value;
+			killTheTimer();
+			changeText(_finalText);
+		}
+		return value;
+	}
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, ?typingSpeed:Float = 0.05, ?textSize:Float = 1)
 	{
 		super(x, y);
 		forceX = Math.NEGATIVE_INFINITY;
 		this.textSize = textSize;
+
+		charFrames = Paths.getSparrowAtlas("alphabet");
+		charFrames.parent.persist = true;
 
 		_finalText = text;
 		this.text = text;
@@ -62,7 +79,7 @@ class Alphabet extends FlxSpriteGroup
 		{
 			if (typed)
 			{
-				startTypedText(typingSpeed);
+				startTypedText();
 			}
 			else
 			{
@@ -78,14 +95,15 @@ class Alphabet extends FlxSpriteGroup
 		for (i in 0...lettersArray.length) {
 			var letter = lettersArray[0];
 			letter.destroy();
-			remove(letter);
-			lettersArray.remove(letter);
+			remove(letter, true);
+			lettersArray.shift();
 		}
 		lettersArray = [];
 		splitWords = [];
 		loopNum = 0;
 		xPos = 0;
 		curRow = 0;
+		yMulti = 1;
 		consecutiveSpaces = 0;
 		xPosResetted = false;
 		finishedText = false;
@@ -99,10 +117,11 @@ class Alphabet extends FlxSpriteGroup
 			typingSpeed = newTypingSpeed;
 		}
 
+
 		if (text != "") {
 			if (typed)
 			{
-				startTypedText(typingSpeed);
+				startTypedText();
 			} else {
 				addText();
 			}
@@ -146,7 +165,7 @@ class Alphabet extends FlxSpriteGroup
 				consecutiveSpaces = 0;
 
 				// var letter:AlphaCharacter = new AlphaCharacter(30 * loopNum, 0, textSize);
-				var letter:AlphaCharacter = new AlphaCharacter(xPos, 0, textSize);
+				var letter:AlphaCharacter = new AlphaCharacter(xPos, 0, textSize, charFrames);
 
 				if (isBold)
 				{
@@ -208,8 +227,9 @@ class Alphabet extends FlxSpriteGroup
 	}
 
 	var typeTimer:FlxTimer = null;
-	public function startTypedText(speed:Float):Void
+	public function startTypedText():Void
 	{
+		var speed = typingSpeed;
 		_finalText = text;
 		doSplitWords();
 
@@ -237,6 +257,7 @@ class Alphabet extends FlxSpriteGroup
 
 	var LONG_TEXT_ADD:Float = -24; //text is over 2 rows long, make it go up a bit
 	public function timerCheck(?tmr:FlxTimer = null) {
+
 		var autoBreak:Bool = false;
 		if ((loopNum <= splitWords.length - 2 && splitWords[loopNum] == "\\" && splitWords[loopNum+1] == "n") ||
 			((autoBreak = true) && xPos >= FlxG.width * 0.65 && splitWords[loopNum] == ' ' ))
@@ -287,7 +308,7 @@ class Alphabet extends FlxSpriteGroup
 				consecutiveSpaces = 0;
 
 				// var letter:AlphaCharacter = new AlphaCharacter(30 * loopNum, 0, textSize);
-				var letter:AlphaCharacter = new AlphaCharacter(xPos, 55 * yMulti, textSize);
+				var letter:AlphaCharacter = new AlphaCharacter(xPos, 55 * yMulti, textSize, charFrames);
 				letter.row = curRow;
 				if (isBold)
 				{
@@ -327,6 +348,7 @@ class Alphabet extends FlxSpriteGroup
 				}
 
 				add(letter);
+				lettersArray.push(letter);
 
 				lastSprite = letter;
 			}
@@ -382,10 +404,9 @@ class AlphaCharacter extends FlxSprite
 
 	private var textSize:Float = 1;
 
-	public function new(x:Float, y:Float, textSize:Float)
+	public function new(x:Float, y:Float, textSize:Float, ?tex:FlxFramesCollection)
 	{
 		super(x, y);
-		var tex = Paths.getSparrowAtlas('alphabet');
 		frames = tex;
 
 		setGraphicSize(Std.int(width * textSize));

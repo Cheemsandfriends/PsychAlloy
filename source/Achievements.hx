@@ -11,8 +11,9 @@ using StringTools;
 
 class Achievements {
 	public static var achievementsStuff:Array<Dynamic> = [ //Name, Description, Achievement save tag, Hidden achievement
-		["Freaky on a Friday Night",	"Play on a Friday... Night.",						'friday_night_play',	 true],
-		["She Calls Me Daddy Too",		"Beat Week 1 on Hard with no Misses.",				'week1_nomiss',			false],
+		["Thank You :)",	"Stay on the credits menu for 1 minute",						'credits_thx',	 true],
+		["Chronic Dumbass Disorder",		"Beat Week 1 on Hard with no Misses.",				'week1_nomiss',			false],
+		["Friday Night",		"Play Friday Night Funkin' On a Friday Night",				'friday_night_play',			false],
 		["No More Tricks",				"Beat Week 2 on Hard with no Misses.",				'week2_nomiss',			false],
 		["Call Me The Hitman",			"Beat Week 3 on Hard with no Misses.",				'week3_nomiss',			false],
 		["Lady Killer",					"Beat Week 4 on Hard with no Misses.",				'week4_nomiss',			false],
@@ -128,8 +129,8 @@ class AchievementObject extends FlxSpriteGroup {
 		add(achievementName);
 		add(achievementText);
 		add(achievementIcon);
-
-		var cam:Array<FlxCamera> = FlxCamera.defaultCameras;
+		@:privateAccess
+		var cam:Array<FlxCamera> = FlxCamera._defaultCameras;
 		if(camera != null) {
 			cam = [camera];
 		}

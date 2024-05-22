@@ -1,0 +1,346 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene18",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene19",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene20",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene21",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene22",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene23",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene24",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene25",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene26",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene27",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene28",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene29",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene30",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene31",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene32",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene33",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene34",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene35",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene36",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "You.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "?",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Initiating interrogation protocol:",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Disclose the location of Alloy immediately.\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Pebobo.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Undentified language detected.\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Searching database for translation...\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Translation [NOT FOUND].",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Initiating elaboration:",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.065,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "....",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Scans have detected trace amounts of \\n             [NITROTETRATRINIUM]\\non the subject.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "DESCRIPTION:\\nprimary component in Alloy's ammunition.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Logic process dictates that you were in\\nrecent contact with the target.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Lead me to his location immediately.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Breppity",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "Tone indicates medium levels of ridicule. Initializing cold shoulder protocol.",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "New obstacle identified.\r",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "attempting to simulate.",
+			"expression": "talk"
+		}
+	]
+}

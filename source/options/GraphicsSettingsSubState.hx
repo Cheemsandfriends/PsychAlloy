@@ -1,5 +1,6 @@
 package options;
 
+import flixel.graphics.tile.FlxDrawQuadsItem;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -31,6 +32,8 @@ using StringTools;
 
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
+
+	var mipOption:Option = null;
 	public function new()
 	{
 		title = 'Graphics';
@@ -53,6 +56,18 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 
+		mipOption = new Option('MipMapping: ',
+			'An additional antialiasing option for scaled objects\n toggling this option may save you rendering performance in exchange of memory, besides of better visuals',
+			'mipmapping',
+			'string',
+			"None",
+			["None", "Fast", "High"]);
+
+		mipOption.options = ["None", "Fast", "High"];
+		mipOption.onChange = onChangeMipMapping;
+		mipOption.showBoyfriend = true;
+		addOption(mipOption);
+		
 		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
 		var option:Option = new Option('Framerate',
 			"Pretty self explanatory, isn't it?",
@@ -90,6 +105,14 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 				sprite.antialiasing = ClientPrefs.globalAntialiasing;
 			}
 		}
+	}
+
+	function onChangeMipMapping()
+	{
+		FlxDrawQuadsItem.mipmapping = cast (2 - mipOption.curOption);
+
+		ClientPrefs.mipMapping = FlxDrawQuadsItem.mipmapping;
+		trace(FlxDrawQuadsItem.mipmapping);
 	}
 
 	function onChangeFramerate()

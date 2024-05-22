@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.system.FlxSplash;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
@@ -82,8 +83,7 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 		ClientPrefs.loadDefaultKeys();
-		addChild(new FlxGame(gameWidth, gameHeight, #if (flixel>="5.0.0")()->Type.createInstance(initialState, []) #else initialState #end, zoom, framerate, framerate, skipSplash, startFullscreen));
-
+		addChild(new FlxGame(gameWidth, gameHeight, #if (flixel>="6.0.0")()->Type.createInstance(initialState, []) #else initialState #end, framerate, framerate, skipSplash, startFullscreen));
 		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);

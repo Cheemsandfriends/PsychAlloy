@@ -1,5 +1,6 @@
 package editors;
 
+import flixel.graphics.frames.FlxAtlasFrames;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -11,7 +12,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
@@ -26,7 +27,6 @@ import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
 import DialogueBoxPsych;
-import lime.system.Clipboard;
 #if sys
 import sys.io.File;
 #end
@@ -84,7 +84,7 @@ class DialogueEditorState extends MusicBeatState
 		addEditorBox();
 		FlxG.mouse.visible = true;
 
-		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O to remove the current dialogue line, Press P to add another line after the current one.', 8);
+		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O to remove the current dialogue line, Press P to add another line after the current one, Press K to add a copy of the current line', 8);
 		addLineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		addLineText.scrollFactor.set();
 		add(addLineText);
@@ -118,6 +118,7 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	var characterInputText:FlxUIInputText;
+	var bgInputText:FlxUIInputText;
 	var lineInputText:FlxUIInputText;
 	var angryCheckbox:FlxUICheckBox;
 	var speedStepper:FlxUINumericStepper;
@@ -128,6 +129,8 @@ class DialogueEditorState extends MusicBeatState
 
 		characterInputText = new FlxUIInputText(10, 20, 80, DialogueCharacter.DEFAULT_CHARACTER, 8);
 		blockPressWhileTypingOn.push(characterInputText);
+		bgInputText = new FlxUIInputText(characterInputText.x + characterInputText.width + 50, 20, 80, "", 8);
+		blockPressWhileTypingOn.push(bgInputText);
 
 		speedStepper = new FlxUINumericStepper(10, characterInputText.y + 40, 0.005, 0.05, 0, 0.5, 3);
 
@@ -153,9 +156,11 @@ class DialogueEditorState extends MusicBeatState
 
 		tab_group.add(new FlxText(10, speedStepper.y - 18, 0, 'Interval/Speed (ms):'));
 		tab_group.add(new FlxText(10, characterInputText.y - 18, 0, 'Character:'));
+		tab_group.add(new FlxText(bgInputText.x, bgInputText.y - 18, 0, 'Background:'));
 		tab_group.add(new FlxText(10, soundInputText.y - 18, 0, 'Sound file name:'));
 		tab_group.add(new FlxText(10, lineInputText.y - 18, 0, 'Text:'));
 		tab_group.add(characterInputText);
+		tab_group.add(bgInputText);
 		tab_group.add(angryCheckbox);
 		tab_group.add(speedStepper);
 		tab_group.add(soundInputText);
@@ -197,7 +202,8 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	function reloadCharacter() {
-		character.frames = Paths.getSparrowAtlas('dialogue/' + character.jsonFile.image);
+		
+		character.reloadFrames();
 		character.jsonFile = character.jsonFile;
 		character.reloadAnimations();
 		character.setGraphicSize(Std.int(character.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
@@ -283,13 +289,16 @@ class DialogueEditorState extends MusicBeatState
 			}
 			else if(sender == lineInputText)
 			{
-				reloadText(0);
 				dialogueFile.dialogue[curSelected].text = lineInputText.text;
 			}
 			else if(sender == soundInputText)
 			{
 				dialogueFile.dialogue[curSelected].sound = soundInputText.text;
-				reloadText(0);
+			}
+			else if (sender == bgInputText)
+			{
+				dialogueFile.dialogue[curSelected].background = bgInputText.text;
+
 			}
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender == speedStepper)) {
 			reloadText(speedStepper.value);
@@ -328,11 +337,6 @@ class DialogueEditorState extends MusicBeatState
 				FlxG.sound.volumeUpKeys = [];
 				blockInput = true;
 
-				if(FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.V && Clipboard.text != null) { //Copy paste
-					inputText.text = ClipboardAdd(inputText.text);
-					inputText.caretIndex = inputText.text.length;
-					getEvent(FlxUIInputText.CHANGE_EVENT, inputText, null, []);
-				}
 				if(FlxG.keys.justPressed.ENTER) {
 					if(inputText == lineInputText) {
 						inputText.text += '\\n';
@@ -387,8 +391,26 @@ class DialogueEditorState extends MusicBeatState
 					];
 				}
 				changeText();
-			} else if(FlxG.keys.justPressed.P) {
+			} 
+			if(FlxG.keys.justPressed.P) {
 				dialogueFile.dialogue.insert(curSelected + 1, copyDefaultLine());
+				changeText(1);
+			}
+			if (FlxG.keys.justPressed.K)
+			{
+				var copy:DialogueLine = {
+					portrait: dialogueFile.dialogue[curSelected].portrait,
+					speed: dialogueFile.dialogue[curSelected].speed,
+					expression: dialogueFile.dialogue[curSelected].expression,
+					text: dialogueFile.dialogue[curSelected].text,
+					boxState: dialogueFile.dialogue[curSelected].boxState,
+				}
+				if (dialogueFile.dialogue[curSelected].sound != null)
+					copy.sound = dialogueFile.dialogue[curSelected].sound;
+				if (dialogueFile.dialogue[curSelected].background != null)
+					copy.background = dialogueFile.dialogue[curSelected].background;
+
+				dialogueFile.dialogue.insert(curSelected + 1, copy);
 				changeText(1);
 			}
 		}
@@ -402,6 +424,10 @@ class DialogueEditorState extends MusicBeatState
 
 		var curDialogue:DialogueLine = dialogueFile.dialogue[curSelected];
 		characterInputText.text = curDialogue.portrait;
+		if (curDialogue.background != null)
+			bgInputText.text = curDialogue.background;
+		else
+			bgInputText.text = "";
 		lineInputText.text = curDialogue.text;
 		angryCheckbox.checked = (curDialogue.boxState == 'angry');
 		speedStepper.value = curDialogue.speed;
@@ -439,16 +465,6 @@ class DialogueEditorState extends MusicBeatState
 			else if(rate > 48) rate = 48;
 			character.animation.curAnim.frameRate = rate;
 		}
-	}
-
-	function ClipboardAdd(prefix:String = ''):String {
-		if(prefix.toLowerCase().endsWith('v')) //probably copy paste attempt
-		{
-			prefix = prefix.substring(0, prefix.length-1);
-		}
-
-		var text:String = prefix + Clipboard.text.replace('\n', '');
-		return text;
 	}
 
 	var _file:FileReference = null;

@@ -1,0 +1,40 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene42",
+			"text": "that'll hold him for a bit.",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene43",
+			"text": "look guys, I may have come over a bit strong. I hope you two can forgive me,",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene43",
+			"text": "Beep blorp",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene44",
+			"text": "ah good, well good luck on your adventures, if you ever need any back up, just page me.",
+			"expression": "neutral"
+		}
+	]
+}

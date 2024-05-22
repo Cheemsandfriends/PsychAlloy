@@ -71,7 +71,7 @@ class Option
 					defaultValue = 1;
 				case 'string':
 					defaultValue = '';
-					if(options.length > 0) {
+					if(options != null && options.length > 0) {
 						defaultValue = options[0];
 					}
 			}

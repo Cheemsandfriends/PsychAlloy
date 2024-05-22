@@ -1,0 +1,76 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene37",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene38",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene38",
+			"text": "Pobebap",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene38",
+			"text": "Funk Drive calibration failed, Preparing for [TERMINATION].",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene38",
+			"text": "Breppity spop",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene39",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene40",
+			"text": "",
+			"expression": "talk"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "none",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "",
+			"expression": "talk"
+		}
+	]
+}

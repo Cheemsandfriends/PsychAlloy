@@ -1,0 +1,21 @@
+{
+	"song": {
+		"events": [
+			[
+				29333.3333333333,
+				[
+					[
+						"Change Character",
+						"BF",
+						"alloyarmor"
+					],
+					[
+						"Play Animation",
+						"transform",
+						"BF"
+					]
+				]
+			]
+		]
+	}
+}

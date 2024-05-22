@@ -8,7 +8,6 @@ class BGSprite extends FlxSprite
 	private var idleAnim:String;
 	public function new(image:String, x:Float = 0, y:Float = 0, ?scrollX:Float = 1, ?scrollY:Float = 1, ?animArray:Array<String> = null, ?loop:Bool = false) {
 		super(x, y);
-
 		if (animArray != null) {
 			frames = Paths.getSparrowAtlas(image);
 			for (i in 0...animArray.length) {
@@ -33,5 +32,10 @@ class BGSprite extends FlxSprite
 		if(idleAnim != null) {
 			animation.play(idleAnim, forceplay);
 		}
+	}
+	public function scaleGraphic(scale:Float = 1)
+	{
+		setGraphicSize(Std.int(width * scale));
+		updateHitbox();
 	}
 }

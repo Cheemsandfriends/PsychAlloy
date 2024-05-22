@@ -1,0 +1,175 @@
+{
+	"dialogue": [
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "I was wondering what all the noise was about.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Guess I shouldn't be too surprised to find you here, Blue. Thanks for leading me right to him.",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "bf",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Sbeeb?",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "He and I go way back.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Primary target identified. Shifting objective.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "You two should probably get outta here.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Things might get rough.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "So, how long's it been, Red? A week, maybe two?",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "NEGATIVE, it has been approximately 6d 3h 5m 30s since our last encounter.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.5,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": ".....",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Man, witty banter with a robot's the worst.\r",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Shifting to primary weapon systems...",
+			"expression": "neutral"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Hold your screws, Recoil.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "I got a new trick up my sleeve. We're not gonna be doing things the old-fashioned way this time.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Pretty sure the kid in the hat gave you a sneak peak already, so you know the deal.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Hope you're not scared to mic up when it's me we're talking about.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "NEGATIVE, As a partially non-mechanical entity, your imperfect musical execution is a detrimental disadvantage.",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "recoil",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "Repriming funk drive...",
+			"expression": "angry"
+		},
+		{
+			"sound": "",
+			"speed": 0.05,
+			"portrait": "alloy",
+			"boxState": "normal",
+			"background": "CutScene41",
+			"text": "That's what I like to hear.",
+			"expression": "angry"
+		}
+	]
+}

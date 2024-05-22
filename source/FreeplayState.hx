@@ -15,7 +15,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import lime.utils.Assets;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
 #if MODS_ALLOWED
@@ -73,19 +73,18 @@ class FreeplayState extends MusicBeatState
 
 			for (j in 0...leWeek.songs.length)
 			{
-				leSongs.push(leWeek.songs[j][0]);
-				leChars.push(leWeek.songs[j][1]);
+				leSongs.push(leWeek.songs[j]);
 			}
 
 			WeekData.setDirectoryFromWeek(leWeek);
 			for (song in leWeek.songs)
 			{
-				var colors:Array<Int> = song[2];
+				var colors:Array<Int> = [255, 255, 255];
 				if(colors == null || colors.length < 3)
 				{
 					colors = [146, 113, 253];
 				}
-				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
+				addSong(song, i, "dad", FlxColor.fromRGB(colors[0], colors[1], colors[2]));
 			}
 		}
 		WeekData.loadTheFirstEnabledMod();
@@ -343,7 +342,6 @@ class FreeplayState extends MusicBeatState
 				FlxG.sound.list.add(vocals);
 				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
 				vocals.play();
-				vocals.persist = true;
 				vocals.looped = true;
 				vocals.volume = 0.7;
 				instPlaying = curSelected;

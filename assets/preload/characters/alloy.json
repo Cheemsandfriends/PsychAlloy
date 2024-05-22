@@ -1,0 +1,22 @@
+{
+	"animations": null,
+	"camera_position": [
+		100,
+		-100
+	],
+	"flip_x": true,
+	"healthbar_colors": [
+		63,
+		92,
+		133
+	],
+	"healthicon": "alloy",
+	"image": "characters/Alloy",
+	"no_antialiasing": false,
+	"position": [
+		0,
+		300
+	],
+	"scale": 1,
+	"sing_duration": 4
+}

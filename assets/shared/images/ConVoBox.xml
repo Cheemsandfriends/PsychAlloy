@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:d84b3060afa470c1e9b8dbc1dbe7547e:111d6d6b12689e262b95f6216ee17016:df606919e13e99333f8fc6994291df23$ -->
+<TextureAtlas imagePath="ConVoBox.png" width="4096" height="2560">
+    <SubTexture name="ConvoBox_00011" x="0" y="0" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00013" x="1024" y="0" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00015" x="2048" y="0" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00017" x="3072" y="0" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00019" x="0" y="512" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00021" x="1024" y="512" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00023" x="2048" y="512" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00025" x="3072" y="512" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00027" x="0" y="1024" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00029" x="1024" y="1024" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00031" x="2048" y="1024" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00033" x="3072" y="1024" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00035" x="0" y="1536" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00037" x="1024" y="1536" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00039" x="2048" y="1536" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00041" x="3072" y="1536" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00043" x="0" y="2048" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00045" x="1024" y="2048" width="1024" height="512"/>
+    <SubTexture name="ConvoBox_00047" x="2048" y="2048" width="1024" height="512"/>
+</TextureAtlas>

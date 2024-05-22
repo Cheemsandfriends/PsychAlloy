@@ -1,0 +1,64 @@
+{
+	"animations": [
+		{
+			"idle_name": "neutral",
+			"loop_name": "neutral",
+			"idle_offsets": [
+				0,
+				0
+			],
+			"anim": "neutral",
+			"loop_offsets": [
+				0,
+				0
+			]
+		},
+		{
+			"idle_name": "excite",
+			"loop_name": "excite",
+			"idle_offsets": [
+				80,
+				-10
+			],
+			"anim": "excite",
+			"loop_offsets": [
+				80,
+				-10
+			]
+		},
+		{
+			"idle_name": "angry",
+			"loop_name": "angry",
+			"idle_offsets": [
+				20,
+				-10
+			],
+			"anim": "angry",
+			"loop_offsets": [
+				20,
+				-10
+			]
+		},
+		{
+			"idle_name": "soot",
+			"loop_name": "soot",
+			"idle_offsets": [
+				-25,
+				0
+			],
+			"anim": "soot",
+			"loop_offsets": [
+				-25,
+				0
+			]
+		}
+	],
+	"position": [
+		50,
+		50
+	],
+	"no_antialiasing": false,
+	"image": "alloy/",
+	"scale": 1.25,
+	"dialogue_pos": "left"
+}

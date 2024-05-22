@@ -11,7 +11,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
@@ -84,7 +84,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camOther);
-		FlxCamera.defaultCameras = [camOther];
+		FlxG.cameras.setDefaultDrawTarget(camGame, false);
 		
 		mainGroup = new FlxSpriteGroup();
 		mainGroup.cameras = [camGame];
@@ -431,7 +431,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	function reloadCharacter() {
 		var charsArray:Array<DialogueCharacter> = [character, ghostLoop, ghostIdle];
 		for (char in charsArray) {
-			char.frames = Paths.getSparrowAtlas('dialogue/' + character.jsonFile.image);
+			char.reloadFrames();
 			char.jsonFile = character.jsonFile;
 			char.reloadAnimations();
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
