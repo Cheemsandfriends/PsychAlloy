@@ -1,5 +1,7 @@
 package flixel.graphics.tile;
 
+import ColorSwap;
+import ColorSwap.CSData;
 import openfl.display3D.Context3DMipFilter;
 #if FLX_DRAW_QUADS
 import flixel.FlxCamera;
@@ -16,6 +18,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 	static inline var VERTICES_PER_QUAD = #if (openfl >= "8.5.0") 4 #else 6 #end;
 
 	public static var mipmapping = MIPNONE;
+	public var csData:CSData;
 
 	public var shader:FlxShader;
 
@@ -71,7 +74,6 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		transforms.push(matrix.tx);
 		transforms.push(matrix.ty);
 
-		
 		for (i in 0...VERTICES_PER_QUAD)
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 
@@ -122,7 +124,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		var shader = shader != null ? shader : graphics.shader;
 		if (shader == null)
 			return;
-		
+
 		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = (camera.antialiasing || antialiasing) ? LINEAR : NEAREST;
 		shader.bitmap.mipFilter = mipmapping;
@@ -132,6 +134,12 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem>
 		{
 			shader.colorMultiplier.value = colorMultipliers;
 			shader.colorOffset.value = colorOffsets;
+		}
+
+		if(csData != null && (shader is ColorSwapShader)) {
+			var shader:ColorSwapShader = cast shader;
+
+			shader.uHsv.value = csData.uHsv;
 		}
 
 		setParameterValue(shader.hasTransform, true);

@@ -204,7 +204,7 @@ class FlxFilteredSprite extends FlxSprite
 			_blankFrame.frame = FlxRect.get(0, 0, _blankFrame.parent.bitmap.width, _blankFrame.parent.bitmap.height);
 			_filterMatrix.translate(_flashRect.x, _flashRect.y);
 			_blankFrame.copyTo(_frame);
-			
+
 
 			filtered = true;
 		}
@@ -215,7 +215,7 @@ class FlxFilteredSprite extends FlxSprite
 		}
 	}
 
-	override function destroy() 
+	override function destroy()
 	{
 		super.destroy();
 		if (_blankFrame != null)
@@ -348,7 +348,7 @@ class FlxAnimateFilterRenderer
 
 		bmp.__renderTransform.identity();
 
-		var shader, cacheBitmap = null;
+		//var shader, cacheBitmap = null;
 		for (filter in filters)
 		{
 			if (filter.__preserveObject)
@@ -366,7 +366,7 @@ class FlxAnimateFilterRenderer
 				renderer.__setRenderTarget(bitmap);
 				renderer.__renderFilterPass(bitmap2, renderer.__defaultDisplayShader, filter.__smooth);
 			}
-			
+
 			filter.__renderDirty = false;
 		}
 
@@ -412,19 +412,19 @@ class FlxAnimateFilterRenderer
 	}
 
 	public function graphicstoBitmapData(gfx:Graphics, ?target:BitmapData = null) // TODO!: Support for CPU based games (Cairo/Canvas only renderers)
-    {
+	{
 		if (gfx.__bounds == null) return null;
-		
+
 		var cacheRTT = renderer.__context3D.__state.renderToTexture;
 		var cacheRTTDepthStencil = renderer.__context3D.__state.renderToTextureDepthStencil;
 		var cacheRTTAntiAlias = renderer.__context3D.__state.renderToTextureAntiAlias;
 		var cacheRTTSurfaceSelector = renderer.__context3D.__state.renderToTextureSurfaceSelector;
-		
+
 		var bounds = gfx.__owner.getBounds(null);
 
-		
+
 		var bmp = (target == null) ? new BitmapData(Math.ceil(bounds.width), Math.ceil(bounds.height), true, 0) : target;
-		
+
 		renderer.__worldTransform.translate(-bounds.x, -bounds.y);
 
 		// GfxRenderer.render(gfx, cast renderer.__softwareRenderer);
@@ -457,6 +457,6 @@ class FlxAnimateFilterRenderer
 			renderer.__context3D.setRenderToBackBuffer();
 		}
 
-        return bmp;
-    }
+		return bmp;
+	}
 }

@@ -1,32 +1,20 @@
 package;
 
-import openfl.filters.BlurFilter;
 import flxanimate.FlxAnimate;
 import flixel.math.FlxPoint;
-import flixel.util.FlxTimer;
-import openfl.display.Bitmap;
-import ArmSprite.NestedFlxSprite;
 #if desktop
 import Discord.DiscordClient;
 #end
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import flixel.math.FlxMath;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
-import openfl.utils.Assets;
 import options.OptionsState;
 
 using StringTools;
@@ -35,10 +23,10 @@ class MainMenuState extends MusicBeatState
 {
 	public static var psychEngineVersion:String = '0.6.1'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
-	
+
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-	
+
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
@@ -80,22 +68,22 @@ class MainMenuState extends MusicBeatState
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-		
+
 		persistentUpdate = persistentDraw = true;
-		
+
 		Paths.currentLevel = "weekalloy";
 
 		var scale = 0.5;
 		var time = "day";
 
-		var stagePos = FlxPoint.get(-100, -100);
+		var stagePos = new FlxPoint(-100, -100);
 		var sky = new BGSprite('$time/sky',  -500 + stagePos.x, -190 + stagePos.y, 0.3, 0.3);
 		sky.scaleGraphic(scale + 1);
 		add(sky);
 		var sumoBldg = new BGSprite('$time/sumoSkyScraper', -430 + stagePos.x, 100 + stagePos.y, 0.4, 0.4);
 		sumoBldg.scaleGraphic(scale);
 		add(sumoBldg);
-		var bldgs = new BGSprite('$time/buildings', -350 + stagePos.x, 30 + stagePos.y, 0.5, 0.5); 
+		var bldgs = new BGSprite('$time/buildings', -350 + stagePos.x, 30 + stagePos.y, 0.5, 0.5);
 		bldgs.scaleGraphic(scale - 0.1);
 		add(bldgs);
 		var planes = new BGSprite('$time/planes', -300 + stagePos.x, 200 + stagePos.y, 0.8, 0.8);
@@ -110,18 +98,13 @@ class MainMenuState extends MusicBeatState
 
 		bf.setGraphicSize(Std.int(bf.width * 0.5));
 		bf.updateHitbox();
-
-		
-		
 		bf.setPosition(FlxG.width - bf.frameWidth + 100, FlxG.height - bf.frameHeight + 60);
-
-
 		bf.dance();
-		
+
 		add(bf);
 
 		Paths.currentLevel = null;
-		
+
 		var vignette = new FlxSprite(Paths.image("mainmenu/menuVignette"));
 		vignette.camera = camAchievement;
 		add(vignette);
@@ -138,7 +121,7 @@ class MainMenuState extends MusicBeatState
 
 		hand = new HandSprite();
 		add(hand);
-		
+
 		MainMenuState.switchLevel = false;
 
 		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, 'Psych Engine v$psychEngineVersion', 12);
@@ -164,7 +147,7 @@ class MainMenuState extends MusicBeatState
 			}
 		}
 		#end
-		
+
 		hand.state = LIFTING;
 		super.create();
 		Paths.clearUnusedMemory();
@@ -205,7 +188,7 @@ class MainMenuState extends MusicBeatState
 		{
 			if (controls.UI_UP_P || controls.UI_DOWN_P)
 			{
-				var point = (controls.UI_UP_P) ? FlxPoint.get(-200, 90) : FlxPoint.get(-130, 50);
+				var point = (controls.UI_UP_P) ? new FlxPoint(-200, 90) : new FlxPoint(-130, 50);
 
 				scrollHand(point, function()
 				{
@@ -236,7 +219,7 @@ class MainMenuState extends MusicBeatState
 			}
 			if (selectinLevels() && (controls.UI_LEFT_P || controls.UI_RIGHT_P))
 			{
-				var point = (controls.UI_LEFT_P) ? FlxPoint.get(100, -50) : FlxPoint.get(190, -80);
+				var point = (controls.UI_LEFT_P) ? new FlxPoint(100, -50) : new FlxPoint(190, -80);
 				scrollHand(point, function()
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -248,8 +231,8 @@ class MainMenuState extends MusicBeatState
 			if (controls.ACCEPT)
 			{
 				var curMenu = arm.options[curSelected].name;
-				
-				scrollHand(FlxPoint.get(), function()
+
+				scrollHand(null, function()
 				{
 					if (arm.state == UNLOCKED)
 					{
@@ -265,13 +248,13 @@ class MainMenuState extends MusicBeatState
 						}
 						else
 							arm.flicker(()-> changeMenu(curMenu));
-						
+
 						if (arm.menu != "main")
 						{
 							bf.playAnim("pre-attack", true);
 							bf.skipDance = true;
 						}
-						
+
 					}
 					else
 					{
@@ -295,7 +278,8 @@ class MainMenuState extends MusicBeatState
 	{
 		selectedSomethin = true;
 		hand.state = IDLE;
-		hand.setPosition(pos.x, pos.y);
+		if(pos != null)
+			hand.setPosition(pos.x, pos.y);
 		hand.onPress = onPress;
 		hand.state = PRESSING;
 	}
@@ -314,7 +298,7 @@ class MainMenuState extends MusicBeatState
 			PlayState.isStoryMode = choice == "story_mode";
 
 			WeekData.reloadWeekFiles(PlayState.isStoryMode);
-			
+
 			arm.changeMenu((PlayState.isStoryMode) ? "story" : "freeplay");
 			CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
 			var options:Array<String> = [];
@@ -353,7 +337,7 @@ class MainMenuState extends MusicBeatState
 			bf.playAnim("attack", true);
 			bf.specialAnim = true;
 
-			
+
 			var songs:Array<String> = [];
 
 			if (PlayState.isStoryMode)
@@ -371,14 +355,14 @@ class MainMenuState extends MusicBeatState
 			PlayState.storyDifficulty = arm.difficulty;
 
 			var diff = CoolUtil.getDifficultyFilePath();
-				
+
 			if (diff == null)
 				diff = "";
 
 			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diff, PlayState.storyPlaylist[0].toLowerCase());
 
 			StageData.loadDirectory(PlayState.SONG);
-			
+
 			PlayState.campaignScore = 0;
 			PlayState.campaignMisses = 0;
 
@@ -403,7 +387,7 @@ class MainMenuState extends MusicBeatState
 		if (curSelected < 0)
 			curSelected = arm.options.length - 1;
 
-		
+
 
 		arm.changeOption(arm.options[curSelected].name);
 
@@ -416,7 +400,7 @@ class MainMenuState extends MusicBeatState
 				arm.changeMenu("freeplay");
 		}
 	}
-	override function beatHit() 
+	override function beatHit()
 	{
 		super.beatHit();
 		if (curBeat % bf.danceEveryNumBeats == 0)

@@ -15,11 +15,10 @@ using StringTools;
 typedef StageFile = {
 	var directory:String;
 	var defaultZoom:Float;
-	var isPixelStage:Bool;
 
-	var boyfriend:Array<Dynamic>;
-	var girlfriend:Array<Dynamic>;
-	var opponent:Array<Dynamic>;
+	var boyfriend:Array<Float>;
+	var girlfriend:Array<Float>;
+	var opponent:Array<Float>;
 	var hide_girlfriend:Bool;
 
 	var camera_boyfriend:Array<Float>;

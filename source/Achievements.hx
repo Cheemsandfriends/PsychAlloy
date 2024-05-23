@@ -1,3 +1,4 @@
+#if ACHIEVEMENTS_ALLOWED
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -158,3 +159,4 @@ class AchievementObject extends FlxSpriteGroup {
 		super.destroy();
 	}
 }
+#end

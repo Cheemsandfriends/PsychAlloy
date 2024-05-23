@@ -14,7 +14,7 @@ enum HandState
     PRESSING;
     CREDITS;
 }
-class HandSprite extends FlxAnimate 
+class HandSprite extends FlxAnimate
 {
     var pressIndex:Int;
     var name:String;
@@ -28,12 +28,12 @@ class HandSprite extends FlxAnimate
     {
         super(X, Y, Paths.getTextureAtlas('mainmenu/hand'));
         antialiasing = ClientPrefs.globalAntialiasing;
-        
+
         name = "PointerHand";
-        
+
         state = LIFTING;
         scripts = anim.curSymbol.timeline.get(0);
-        
+
         scripts.get("CREDITS").add(() -> anim.goToFrameLabel("PRE-IDLE"));
         scripts.get("IDLE").add(() -> anim.pause());
     }
@@ -66,7 +66,7 @@ class HandSprite extends FlxAnimate
         }
 
         anim.goToFrameLabel(value.getName());
-        
+
         anim.resume();
         return value;
     }

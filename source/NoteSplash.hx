@@ -1,12 +1,9 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 
-class NoteSplash extends FlxSprite
+class NoteSplash extends FlxColorSwap
 {
-	public var colorSwap:ColorSwap = null;
 	private var idleAnim:String;
 	private var textureLoaded:String = null;
 
@@ -18,9 +15,12 @@ class NoteSplash extends FlxSprite
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 
 		loadAnims(skin);
-		
-		colorSwap = new ColorSwap();
-		shader = colorSwap.shader;
+
+		if(ClientPrefs.hasArrowHSV()) {
+			shader = getColorSwap();
+		}
+
+		animation.finishCallback = (_) -> kill();
 
 		setupNoteSplash(x, y, note);
 		antialiasing = ClientPrefs.globalAntialiasing;
@@ -35,7 +35,7 @@ class NoteSplash extends FlxSprite
 			case 0:
 				offx = 120;
 				offy = 220;
-		}	
+		}
 		if (texture != null && StringTools.endsWith(texture, "ICE"))
 		{
 			alpha = 0.6;
@@ -50,14 +50,16 @@ class NoteSplash extends FlxSprite
 		if(textureLoaded != texture) {
 			loadAnims(texture);
 		}
-		revive();
-		colorSwap.hue = hueColor;
-		colorSwap.saturation = satColor;
-		colorSwap.brightness = brtColor;
+		//revive();
+		if(colorSwap != null) {
+			colorSwap.hue = hueColor;
+			colorSwap.saturation = satColor;
+			colorSwap.brightness = brtColor;
+		}
 
 		animation.play('note' + note, true);
-		animation.finishCallback = (_) -> kill();
-		if(animation.curAnim != null)animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
+		if(animation.curAnim != null)
+			animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 
 	function loadAnims(skin:String) {
@@ -74,5 +76,7 @@ class NoteSplash extends FlxSprite
 			var note = (StringTools.endsWith(skin, "ICE")) ? '${notes[i]}_ice_splash' : 'note_splash_${notes[i]}';
 			animation.addByPrefix('note'+ i, note, 24, false);
 		}
+
+		textureLoaded = skin;
 	}
 }

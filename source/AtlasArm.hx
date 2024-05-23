@@ -31,7 +31,7 @@ class AtlasArm extends FlxAnimate
     var menuObject:FlxObject;
 
     var subMenuObject:FlxObject;
-    
+
 
     var flickering:Bool = false;
 
@@ -41,8 +41,8 @@ class AtlasArm extends FlxAnimate
 
         antialiasing = ClientPrefs.globalAntialiasing;
         state = LIFTING;
-        
-        anim.getFrameLabel("UNLOCKED").add(() -> 
+
+        anim.getFrameLabel("UNLOCKED").add(() ->
         {
             state = UNLOCKED;
             anim.removeAllCallbacksFrom("UNLOCKED");
@@ -62,7 +62,7 @@ class AtlasArm extends FlxAnimate
         var menu = anim.getByInstance("Menu");
 
         var frame = menu.getFrameLabel(value);
-        
+
         this.menu = value;
         anim.curSymbol.getElementByName("Menu").symbol.firstFrame = frame.index;
 
@@ -70,16 +70,16 @@ class AtlasArm extends FlxAnimate
             subMenu = anim.getByInstance("SubMenu");
 
         if (value != "bonus")
-        {        
+        {
             var menuLabel = subMenu.getFrameLabel(value.toUpperCase(), "MENUS");
-            
+
             var isLevels = ["STORY", "FREEPLAY"].indexOf(menuLabel.name) != -1;
 
             anim.curSymbol.timeline.get("diffcultyBlocks").visible = isLevels;
 
             options = subMenu.getFrameLabels("NAMES");
 
-            options = options.filter(function (f) 
+            options = options.filter(function (f)
             {
                 if (isLevels && f.name == "tutorial")
                     return true;
@@ -91,10 +91,10 @@ class AtlasArm extends FlxAnimate
     public function changeOption(value:String)
     {
         if (options != null)
-        {   
+        {
             var subM = anim.curSymbol.getElementByName("SubMenu");
             var index = subMenu.getFrameLabel(value, "NAMES").index;
-            
+
             var changed:Bool = false;
             if (subMenu.timeline.get("CHECK").get(index).name == "UNLOCKED")
             {
@@ -113,7 +113,7 @@ class AtlasArm extends FlxAnimate
                 difficulty = difficulty;
             }
             subM.symbol.firstFrame = index;
-            
+
         }
     }
 
@@ -122,7 +122,7 @@ class AtlasArm extends FlxAnimate
         value %= CoolUtil.difficulties.length;
         if (value < 0)
             value = CoolUtil.difficulties.length - 1;
-        
+
         anim.curSymbol.getElementByName("DifficultyBlocks").symbol.firstFrame = value;
         return difficulty = value;
     }
@@ -174,5 +174,5 @@ class AtlasArm extends FlxAnimate
     {
         anim.goToFrameLabel("Transition");
     }
-    
+
 }
