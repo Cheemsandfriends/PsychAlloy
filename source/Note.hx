@@ -21,8 +21,7 @@ typedef EventNote = {
 
 class Note extends FlxSprite
 {
-	public var extraData:Map<String,Dynamic> = [];
-
+	//public var extraData:Map<String,Dynamic> = [];
 	public var strumTime:Float = 0;
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
@@ -37,8 +36,8 @@ class Note extends FlxSprite
 
 	public var spawned:Bool = false;
 
-	public var tail:Array<Note> = []; // for sustains
-	public var parent:Note;
+	//public var tail:Array<Note> = []; // for sustains
+	//public var parent:Note;
 
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
@@ -109,7 +108,7 @@ class Note extends FlxSprite
 		if (value != frozen)
 		{
 			frozen = value;
-			
+
 			if (frozen)
 			{
 				_noteType = noteType;
@@ -146,8 +145,8 @@ class Note extends FlxSprite
 	private function set_texture(value:String):String {
 		if(texture != value) {
 			reloadNote('', value);
+			texture = value;
 		}
-		texture = value;
 		return value;
 	}
 
@@ -156,7 +155,7 @@ class Note extends FlxSprite
 		colorSwap.hue = ClientPrefs.arrowHSV[noteData % 4][0] / 360;
 		colorSwap.saturation = ClientPrefs.arrowHSV[noteData % 4][1] / 100;
 		colorSwap.brightness = ClientPrefs.arrowHSV[noteData % 4][2] / 100;
-	
+
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
@@ -180,7 +179,7 @@ class Note extends FlxSprite
 
 					if (_frozenFrames == null)
 						_frozenFrames = frames;
-					
+
 				case 'Alt Animation':
 					animSuffix = '-alt';
 				case 'No Animation':
@@ -331,7 +330,7 @@ class Note extends FlxSprite
 
 		var arraySkin:Array<String> = skin.split('/');
 		arraySkin[arraySkin.length-1] = prefix + arraySkin[arraySkin.length-1] + suffix;
-		
+
 
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
@@ -387,8 +386,8 @@ class Note extends FlxSprite
 		}
 	}
 
+	static var notes = ["purple", "blue", "green", "red"];
 	function loadNoteAnims() {
-		var notes = ["purple", "blue", "green", "red"];
 		for (note in notes)
 		{
 			animation.addByPrefix('${note}Scroll', '${note}0');
