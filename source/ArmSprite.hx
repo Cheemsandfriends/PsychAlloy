@@ -23,7 +23,7 @@ enum ArmState
 class ArmSprite extends NestedFlxSprite
 {
     public var menuButtons:MenuUI;
-    
+
     public var state(default, set):ArmState;
 
     public function new(?X:Float = 0, ?Y:Float = 0)
@@ -46,7 +46,7 @@ class ArmSprite extends NestedFlxSprite
         animation.play(value.getName());
         return state = value;
     }
-    override public function update(elapsed:Float) 
+    override public function update(elapsed:Float)
     {
         if (state == OPENING && animation.finished)
         {
@@ -62,14 +62,14 @@ class MenuUI extends NestedFlxSprite
 {
 	// #region Variables
 	public var menuText:NestedFlxSprite;
-	
+
 	public var textOption:NestedFlxSprite;
 
 	@:allow(ArmSprite)
 	var locked(default, set):Bool;
 
 	var _diff:NestedFlxSprite;
-	
+
 	public var difficulty(default, set):Int;
 
 	public var options(default, set):Array<String>;
@@ -92,7 +92,7 @@ class MenuUI extends NestedFlxSprite
 		add(textOption);
 		_diff = new NestedFlxSprite();
 	}
-	
+
 	public function setMenu(state:String)
     {
 		var menu = state.charAt(0).toUpperCase() + state.substring(1);
@@ -114,14 +114,14 @@ class MenuUI extends NestedFlxSprite
 		difficulty = 1;
 		var json = Paths.getTextFromFile('images/mainmenu/menuTexts/select/${menuText.name}Menu/position.json');
 		_json = (json != null) ? haxe.Json.parse(json) : null;
-		
+
     }
 
 	//#region Setting stuff
-	function set_curOption(value:Int) 
+	function set_curOption(value:Int)
 	{
 		textOption.name = options[value];
-		
+
 		textOption.loadGraphic(Paths.returnGraphic('mainmenu/menuTexts/select/${menuText.name}Menu/${textOption.name}'));
 		textOption.setPosition();
 
@@ -167,7 +167,7 @@ class MenuUI extends NestedFlxSprite
 	//#endregion
 }
 
-class NestedFlxSprite extends FlxNestedSprite 
+class NestedFlxSprite extends FlxNestedSprite
 {
     public var name:String;
 
@@ -190,9 +190,9 @@ class NestedFlxSprite extends FlxNestedSprite
 
 /**
  * Copied from flixel addons LMAOOOOOOOOOO
- * 
+ *
  * ----------------------------------------------------
- * 
+ *
  * Some sort of DisplayObjectContainer but very limited.
  * It can contain only other FlxNestedSprites.
  * @author Zaphod
@@ -217,21 +217,21 @@ class FlxNestedSprite extends FlxSprite
 	 * Y position of this sprite relative to parent, 0 by default
 	 */
 	public var relativeY:Float = 0;
-	
+
 	@:noCompletion
 	@:deprecated("`relativeAngle` is deprecated. Use `angle` instead.")
 	/**
 	 * Angle of this sprite relative to parent
 	 */
 	public var relativeAngle:Float = 0;
-	
+
 	@:noCompletion
 	@:deprecated("`relativeAngularVelocity` is deprecated. Use `angularVelocity` instead.")
 	/**
 	 * Angular velocity relative to parent sprite
 	 */
 	public var relativeAngularVelocity:Float = 0;
-	
+
 	@:noCompletion
 	@:deprecated("relativeAngularAcceleration is deprecated. Use `angularAcceleration` instead.")
 	/**
@@ -241,21 +241,21 @@ class FlxNestedSprite extends FlxSprite
 	@:noCompletion
 	@:deprecated("`relativeAlpha` is deprecated. Use `alpha` instead.")
 	public var relativeAlpha:Float = 1;
-	
+
 	@:noCompletion
 	@:deprecated("`relativeScale` is deprecated. Use `scale` instead.")
 	/**
 	 * Scale of this sprite relative to parent
 	 */
 	public var relativeScale(default, null):FlxPoint = FlxPoint.get(1, 1);
-	
+
 	@:noCompletion
 	@:deprecated("`relativeVelocity` is deprecated. Use `velocity` instead.")
 	/**
 	 * Velocity relative to parent sprite
 	 */
 	public var relativeVelocity(default, null):FlxPoint = FlxPoint.get();
-	
+
 	@:noCompletion
 	@:deprecated("`relativeAcceleration` is deprecated. Use `acceleration` instead.")
 	/**
@@ -263,7 +263,7 @@ class FlxNestedSprite extends FlxSprite
 	 */
 	public var relativeAcceleration(default, null):FlxPoint = FlxPoint.get();
 
-	
+
 	/**
 	 * All FlxNestedSprites in this list.
 	 */
@@ -288,7 +288,7 @@ class FlxNestedSprite extends FlxSprite
 	override public function destroy():Void
 	{
 		super.destroy();
-		
+
 		children = FlxDestroyUtil.destroyArray(children);
 		_parent = null;
 	}
@@ -327,7 +327,7 @@ class FlxNestedSprite extends FlxSprite
 
 		if (index >= 0)
 			children.splice(index, 1);
-		
+
 		Child._parent = null;
 
 		return Child;
@@ -390,7 +390,7 @@ class FlxNestedSprite extends FlxSprite
 				child.preUpdate(elapsed);
 		}
 	}
-	override public function update(elapsed:Float) 
+	override public function update(elapsed:Float)
 	{
 		preUpdate(elapsed);
 
@@ -399,7 +399,7 @@ class FlxNestedSprite extends FlxSprite
 			if (child.active && child.exists)
 				child.update(elapsed);
 		}
-		
+
 		postUpdate(elapsed);
 	}
 
@@ -434,7 +434,7 @@ class FlxNestedSprite extends FlxSprite
 
 		camera.drawPixels(_frame, framePixels, _matrix, relativeColorTransform, blend, relativeAntialiasing, shader);
 	}
-	override function updateColorTransform() 
+	override function updateColorTransform()
 	{
 		super.updateColorTransform();
 

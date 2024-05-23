@@ -7,7 +7,7 @@ import flxanimate.effects.FlxTint;
 #if desktop
 import Discord.DiscordClient;
 #end
-import flash.text.TextField;
+import openfl.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;

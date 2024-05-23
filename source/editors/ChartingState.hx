@@ -43,12 +43,12 @@ import openfl.utils.ByteArray;
 import openfl.utils.Assets as OpenFlAssets;
 import lime.media.AudioBuffer;
 import haxe.io.Bytes;
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 import flixel.util.FlxSort;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-import flash.media.Sound;
+import openfl.media.Sound;
 #end
 
 using StringTools;
@@ -125,11 +125,11 @@ class ChartingState extends MusicBeatState
 	var dummyArrow:FlxSprite;
 
 	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
-	var curRenderedNotes:FlxTypedGroup<Note>;
+	var curRenderedNotes:FlxTypedGroup<ChartNote>;
 	var curRenderedNoteType:FlxTypedGroup<FlxText>;
 
 	var nextRenderedSustains:FlxTypedGroup<FlxSprite>;
-	var nextRenderedNotes:FlxTypedGroup<Note>;
+	var nextRenderedNotes:FlxTypedGroup<ChartNote>;
 
 	var gridBG:FlxSprite;
 	var nextGridBG:FlxSprite;
@@ -267,11 +267,11 @@ class ChartingState extends MusicBeatState
 		rightIcon.setPosition(GRID_SIZE * 5.2, -100);
 
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
-		curRenderedNotes = new FlxTypedGroup<Note>();
+		curRenderedNotes = new FlxTypedGroup<ChartNote>();
 		curRenderedNoteType = new FlxTypedGroup<FlxText>();
 
 		nextRenderedSustains = new FlxTypedGroup<FlxSprite>();
-		nextRenderedNotes = new FlxTypedGroup<Note>();
+		nextRenderedNotes = new FlxTypedGroup<ChartNote>();
 
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
@@ -1568,7 +1568,7 @@ class ChartingState extends MusicBeatState
 		{
 			if (FlxG.mouse.overlaps(curRenderedNotes))
 			{
-				curRenderedNotes.forEachAlive(function(note:Note)
+				curRenderedNotes.forEachAlive(function(note:ChartNote)
 				{
 					if (FlxG.mouse.overlaps(note))
 					{
@@ -1959,7 +1959,7 @@ class ChartingState extends MusicBeatState
 		"\n\nBeat Snap: " + quantization + "th";
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
-		curRenderedNotes.forEachAlive(function(note:Note) {
+		curRenderedNotes.forEachAlive(function(note:ChartNote) {
 			note.alpha = 1;
 			if(curSelectedNote != null) {
 				var noteDataToCheck:Int = note.noteData;
@@ -2543,7 +2543,7 @@ class ChartingState extends MusicBeatState
 		var beats:Float = getSectionBeats();
 		for (i in _song.notes[curSec].sectionNotes)
 		{
-			var note:Note = setupNoteData(i, false);
+			var note:ChartNote = setupNoteData(i, false);
 			curRenderedNotes.add(note);
 			if (note.sustainLength > 0)
 			{
@@ -2574,7 +2574,7 @@ class ChartingState extends MusicBeatState
 		{
 			if(endThing > i[0] && i[0] >= startThing)
 			{
-				var note:Note = setupNoteData(i, false);
+				var note:ChartNote = setupNoteData(i, false);
 				curRenderedNotes.add(note);
 
 				var text:String = 'Event: ' + note.eventName + ' (' + Math.floor(note.strumTime) + ' ms)' + '\nValue 1: ' + note.eventVal1 + '\nValue 2: ' + note.eventVal2;
@@ -2596,7 +2596,7 @@ class ChartingState extends MusicBeatState
 		if(curSec < _song.notes.length-1) {
 			for (i in _song.notes[curSec+1].sectionNotes)
 			{
-				var note:Note = setupNoteData(i, true);
+				var note:ChartNote = setupNoteData(i, true);
 				note.alpha = 0.6;
 				nextRenderedNotes.add(note);
 				if (note.sustainLength > 0)
@@ -2613,20 +2613,20 @@ class ChartingState extends MusicBeatState
 		{
 			if(endThing > i[0] && i[0] >= startThing)
 			{
-				var note:Note = setupNoteData(i, true);
+				var note:ChartNote = setupNoteData(i, true);
 				note.alpha = 0.6;
 				nextRenderedNotes.add(note);
 			}
 		}
 	}
 
-	function setupNoteData(i:Array<Dynamic>, isNextSection:Bool):Note
+	function setupNoteData(i:Array<Dynamic>, isNextSection:Bool):ChartNote
 	{
 		var daNoteInfo:Int = Std.parseInt(Std.string(i[1]));
 		var daStrumTime:Dynamic = i[0];
 		var daSus:Dynamic = i[2];
 
-		var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, null, true);
+		var note:ChartNote = new ChartNote(daStrumTime, daNoteInfo % 4, null, null, true);
 		if(daSus != null) { //Common note
 			if(!Std.isOfType(i[3], String)) //Convert old note type to new note type format
 			{
@@ -2682,7 +2682,7 @@ class ChartingState extends MusicBeatState
 		return retStr;
 	}
 
-	function setupSusNote(note:Note, beats:Float):FlxSprite {
+	function setupSusNote(note:ChartNote, beats:Float):FlxSprite {
 		var height:Int = Math.floor(FlxMath.remapToRange(note.sustainLength, 0, Conductor.stepCrochet * 16, 0, GRID_SIZE * 16 * zoomList[curZoom]) + (GRID_SIZE * zoomList[curZoom]) - GRID_SIZE / 2);
 		var minHeight:Int = Std.int((GRID_SIZE * zoomList[curZoom] / 2) + GRID_SIZE / 2);
 		if(height < minHeight) height = minHeight;
@@ -2708,7 +2708,7 @@ class ChartingState extends MusicBeatState
 		_song.notes.push(sec);
 	}
 
-	function selectNote(note:Note):Void
+	function selectNote(note:ChartNote):Void
 	{
 		var noteDataToCheck:Int = note.noteData;
 
@@ -2742,7 +2742,7 @@ class ChartingState extends MusicBeatState
 		updateNoteUI();
 	}
 
-	function deleteNote(note:Note):Void
+	function deleteNote(note:ChartNote):Void
 	{
 		var noteDataToCheck:Int = note.noteData;
 		if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
@@ -2785,7 +2785,7 @@ class ChartingState extends MusicBeatState
 		var delnote = false;
 		if(strumLineNotes.members[d].overlaps(curRenderedNotes))
 		{
-			curRenderedNotes.forEachAlive(function(note:Note)
+			curRenderedNotes.forEachAlive(function(note:ChartNote)
 			{
 				if (note.overlapsPoint(new FlxPoint(strumLineNotes.members[d].x + 1,strumLine.y+1)) && note.noteData == d%4)
 				{

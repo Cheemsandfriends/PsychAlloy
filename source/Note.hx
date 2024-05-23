@@ -1,13 +1,7 @@
 package;
 
-import flixel.animation.FlxAnimationController;
+import flixel.math.FlxRect;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.math.FlxMath;
-import flixel.util.FlxColor;
-import flash.display.BitmapData;
 import editors.ChartingState;
 
 using StringTools;
@@ -43,11 +37,6 @@ class Note extends FlxColorSwap
 	public var isHoldEnd:Bool = false;
 	public var isSustainNote:Bool = false;
 	public var noteType(default, set):String = null;
-
-	public var eventName:String = '';
-	public var eventLength:Int = 0;
-	public var eventVal1:String = '';
-	public var eventVal2:String = '';
 
 	public var inEditor:Bool = false;
 
@@ -306,8 +295,6 @@ class Note extends FlxColorSwap
 		x += offsetX;
 	}
 
-	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
-	public var originalHeightForCalcs:Float = 6;
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
 		if(prefix == null) prefix = '';
 		if(texture == null) texture = '';
@@ -422,5 +409,15 @@ class Note extends FlxColorSwap
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}
+	}
+
+	override function set_clipRect(rect:FlxRect):FlxRect
+	{
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
 	}
 }
