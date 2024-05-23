@@ -10,7 +10,7 @@ import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
-import Section.SwagSection;
+import Song;
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;
@@ -330,22 +330,14 @@ class Character extends FlxSprite
 				}
 			}*/
 		}
-
-		switch(curCharacter)
-		{
-			case 'pico-speaker':
-				skipDance = true;
-				loadMappedAnims();
-				playAnim("shoot1");
-		}
 	}
 
 	public function getCurAnimName():Null<String>
 	{
 		if (atlas != null)
 			return atlas.anim.curInstance.symbol.instance;
-		
-		return (animation.curAnim != null)  ? animation.curAnim.name : null;
+
+		return (animation.curAnim != null) ? animation.curAnim.name : null;
 	}
 
 	public function getCurAnimFrame():Int
@@ -586,18 +578,6 @@ class Character extends FlxSprite
 				danced = !danced;
 			}
 		}
-	}
-	
-	function loadMappedAnims():Void
-	{
-		var noteData:Array<SwagSection> = Song.loadFromJson('picospeaker', Paths.formatToSongPath(PlayState.SONG.song)).notes;
-		for (section in noteData) {
-			for (songNotes in section.sectionNotes) {
-				animationNotes.push(songNotes);
-			}
-		}
-		TankmenBG.animationNotes = animationNotes;
-		animationNotes.sort(sortAnims);
 	}
 
 	function sortAnims(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int

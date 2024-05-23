@@ -37,7 +37,9 @@ class GameOverSubstate extends MusicBeatSubstate
 	override function create()
 	{
 		instance = this;
+		#if LUA_ALLOWED
 		PlayState.instance.callOnLuas('onGameOverStart', []);
+		#end
 
 		super.create();
 	}
@@ -45,8 +47,10 @@ class GameOverSubstate extends MusicBeatSubstate
 	public function new(x:Float, y:Float, camX:Float, camY:Float)
 	{
 		super();
+		#if LUA_ALLOWED
 		PlayState.instance.setOnLuas('inGameOver', true);
-		
+		#end
+
 		Conductor.songPosition = 0;
 
 		boyfriend = new Boyfriend(x, y, characterName);
@@ -75,7 +79,9 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		super.update(elapsed);
 
+		#if LUA_ALLOWED
 		PlayState.instance.callOnLuas('onUpdate', [elapsed]);
+		#end
 		if(updateCamera) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 0.6, 0, 1);
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
@@ -93,11 +99,13 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.seenCutscene = false;
 
 			WeekData.loadTheFirstEnabledMod();
-			
+
 			MusicBeatState.switchState(new MainMenuState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			#if LUA_ALLOWED
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
+			#end
 		}
 
 		if (boyfriend.curAnimName == 'firstDeath')
@@ -114,7 +122,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				if (PlayState.SONG.stage == 'tank')
 				{
 					coolStartDeath(0.2);
-					
+
 					var exclude:Array<Int> = [];
 					//if(!ClientPrefs.cursing) exclude = [1, 3, 8, 13, 17, 21];
 
@@ -137,7 +145,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
+		#if LUA_ALLOWED
 		PlayState.instance.callOnLuas('onUpdatePost', [elapsed]);
+		#end
 	}
 
 	override function beatHit()
@@ -170,7 +180,9 @@ class GameOverSubstate extends MusicBeatSubstate
 					MusicBeatState.resetState();
 				});
 			});
+			#if LUA_ALLOWED
 			PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
+			#end
 		}
 	}
 }
