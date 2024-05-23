@@ -19,7 +19,7 @@ typedef EventNote = {
 	value2:String
 }
 
-class Note extends FlxSprite
+class Note extends FlxColorSwap
 {
 	//public var extraData:Map<String,Dynamic> = [];
 	public var strumTime:Float = 0;
@@ -40,6 +40,7 @@ class Note extends FlxSprite
 	//public var parent:Note;
 
 	public var sustainLength:Float = 0;
+	public var isHoldEnd:Bool = false;
 	public var isSustainNote:Bool = false;
 	public var noteType(default, set):String = null;
 
@@ -48,13 +49,12 @@ class Note extends FlxSprite
 	public var eventVal1:String = '';
 	public var eventVal2:String = '';
 
-	public var colorSwap:ColorSwap;
 	public var inEditor:Bool = false;
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
-	public var earlyHitMult:Float = 0.5;
-	public var lateHitMult:Float = 1;
+	public var earlyHitMult:Single = 0.5;
+	public var lateHitMult:Single = 1;
 	public var lowPriority:Bool = false;
 
 	public static var swagWidth:Float = 160 * 0.7;
@@ -135,7 +135,7 @@ class Note extends FlxSprite
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit
 	{
-		if(isSustainNote && !animation.curAnim.name.endsWith('end'))
+		if(isSustainNote && !isHoldEnd)
 		{
 			scale.y *= ratio;
 			updateHitbox();
@@ -152,9 +152,12 @@ class Note extends FlxSprite
 
 	private function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG.splashSkin;
-		colorSwap.hue = ClientPrefs.arrowHSV[noteData % 4][0] / 360;
-		colorSwap.saturation = ClientPrefs.arrowHSV[noteData % 4][1] / 100;
-		colorSwap.brightness = ClientPrefs.arrowHSV[noteData % 4][2] / 100;
+		if(colorSwap != null) {
+			var hsv = ClientPrefs.arrowHSV[noteData % 4];
+			colorSwap.hue = hsv[0] / 360;
+			colorSwap.saturation = hsv[1] / 100;
+			colorSwap.brightness = hsv[2] / 100;
+		}
 
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
@@ -162,9 +165,11 @@ class Note extends FlxSprite
 					ignoreNote = mustPress;
 					reloadNote('HURT');
 					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.hue = 0;
-					colorSwap.saturation = 0;
-					colorSwap.brightness = 0;
+					if(colorSwap != null) {
+						colorSwap.hue = 0;
+						colorSwap.saturation = 0;
+						colorSwap.brightness = 0;
+					}
 					lowPriority = true;
 
 					if(isSustainNote) {
@@ -190,9 +195,11 @@ class Note extends FlxSprite
 			}
 			noteType = value;
 		}
-		noteSplashHue = colorSwap.hue;
-		noteSplashSat = colorSwap.saturation;
-		noteSplashBrt = colorSwap.brightness;
+		if(colorSwap != null) {
+			noteSplashHue = colorSwap.hue;
+			noteSplashSat = colorSwap.saturation;
+			noteSplashBrt = colorSwap.brightness;
+		}
 		return value;
 	}
 
@@ -214,8 +221,9 @@ class Note extends FlxSprite
 		this.noteData = noteData;
 		if(noteData > -1) {
 			texture = '';
-			colorSwap = new ColorSwap();
-			shader = colorSwap.shader;
+			if(ClientPrefs.hasArrowHSV()) {
+				shader = getColorSwap();
+			}
 
 			x += swagWidth * (noteData % 4);
 			if(!isSustainNote) { //Doing this 'if' check to fix the warnings on Senpai songs
@@ -262,6 +270,8 @@ class Note extends FlxSprite
 					animation.play('redholdend');
 			}
 
+			isHoldEnd = true;
+
 			updateHitbox();
 
 			offsetX -= width / 2;
@@ -282,6 +292,7 @@ class Note extends FlxSprite
 					case 3:
 						prevNote.animation.play('redhold');
 				}
+				prevNote.isHoldEnd = false;
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(PlayState.instance != null)
@@ -308,7 +319,6 @@ class Note extends FlxSprite
 	}
 
 	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
-	var lastNoteScaleToo:Float = 1;
 	public var originalHeightForCalcs:Float = 6;
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
 		if(prefix == null) prefix = '';
@@ -356,13 +366,6 @@ class Note extends FlxSprite
 				offsetX += lastNoteOffsetXForPixelAutoAdjusting;
 				lastNoteOffsetXForPixelAutoAdjusting = (width - 7) * (PlayState.daPixelZoom / 2);
 				offsetX -= lastNoteOffsetXForPixelAutoAdjusting;
-
-				/*if(animName != null && !animName.endsWith('end'))
-				{
-					lastScaleY /= lastNoteScaleToo;
-					lastNoteScaleToo = (6 / height);
-					lastScaleY *= lastNoteScaleToo;
-				}*/
 			}
 		} else {
 			if (frozen && _cacheFrames == null)
@@ -388,32 +391,38 @@ class Note extends FlxSprite
 
 	static var notes = ["purple", "blue", "green", "red"];
 	function loadNoteAnims() {
-		for (note in notes)
-		{
-			animation.addByPrefix('${note}Scroll', '${note}0');
+		//for (note in notes)
+		//{
+		var note = notes[noteData % 4];
+		animation.addByPrefix('${note}Scroll', '${note}0');
 
-			animation.addByPrefix('${note}holdend', (note == "purple") ? "pruple end hold" : '$note hold end');
-			animation.addByPrefix('${note}hold', '$note hold piece');
-		}
+		animation.addByPrefix('${note}holdend', (note == "purple") ? "pruple end hold" : '$note hold end');
+		animation.addByPrefix('${note}hold', '$note hold piece');
+		//}
 
 		setGraphicSize(Std.int(width * 0.7));
 		updateHitbox();
 	}
 
 	function loadPixelNoteAnims() {
-		animation.add('purpleholdend', [PURP_NOTE + 4]);
-		animation.add('greenholdend', [GREEN_NOTE + 4]);
-		animation.add('redholdend', [RED_NOTE + 4]);
-		animation.add('blueholdend', [BLUE_NOTE + 4]);
-
-		animation.add('purplehold', [PURP_NOTE]);
-		animation.add('greenhold', [GREEN_NOTE]);
-		animation.add('redhold', [RED_NOTE]);
-		animation.add('bluehold', [BLUE_NOTE]);
-		animation.add('greenScroll', [GREEN_NOTE + 4]);
-		animation.add('redScroll', [RED_NOTE + 4]);
-		animation.add('blueScroll', [BLUE_NOTE + 4]);
-		animation.add('purpleScroll', [PURP_NOTE + 4]);
+		switch(noteData) {
+			case 0:
+				animation.add('purpleholdend', [PURP_NOTE + 4]);
+				animation.add('purplehold', [PURP_NOTE]);
+				animation.add('purpleScroll', [PURP_NOTE + 4]);
+			case 1:
+				animation.add('blueholdend', [BLUE_NOTE + 4]);
+				animation.add('bluehold', [BLUE_NOTE]);
+				animation.add('blueScroll', [BLUE_NOTE + 4]);
+			case 2:
+				animation.add('greenholdend', [GREEN_NOTE + 4]);
+				animation.add('greenhold', [GREEN_NOTE]);
+				animation.add('greenScroll', [GREEN_NOTE + 4]);
+			case 3:
+				animation.add('redholdend', [RED_NOTE + 4]);
+				animation.add('redhold', [RED_NOTE]);
+				animation.add('redScroll', [RED_NOTE + 4]);
+		}
 	}
 
 	override function update(elapsed:Float)

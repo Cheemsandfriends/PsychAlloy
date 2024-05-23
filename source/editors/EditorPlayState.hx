@@ -55,10 +55,10 @@ class EditorPlayState extends MusicBeatState
 	var stepTxt:FlxText;
 	var beatTxt:FlxText;
 	var sectionTxt:FlxText;
-	
+
 	var timerToStart:Float = 0;
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
-	
+
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
 
@@ -79,11 +79,11 @@ class EditorPlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_up')),
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
-		
+
 		strumLine = new FlxSprite(ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, 50).makeGraphic(FlxG.width, 10);
 		if(ClientPrefs.downScroll) strumLine.y = FlxG.height - 150;
 		strumLine.scrollFactor.set();
-		
+
 		comboGroup = new FlxTypedGroup<FlxSprite>();
 		add(comboGroup);
 
@@ -99,14 +99,14 @@ class EditorPlayState extends MusicBeatState
 				note.visible = false;
 			});
 		}*/
-		
+
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 		add(grpNoteSplashes);
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.0;
-		
+
 		if (PlayState.SONG.needsVoices)
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 		else
@@ -134,13 +134,13 @@ class EditorPlayState extends MusicBeatState
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
-		
+
 		sectionTxt = new FlxText(10, 580, FlxG.width - 20, "Section: 0", 20);
 		sectionTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		sectionTxt.scrollFactor.set();
 		sectionTxt.borderSize = 1.25;
 		add(sectionTxt);
-		
+
 		beatTxt = new FlxText(10, sectionTxt.y + 30, FlxG.width - 20, "Beat: 0", 20);
 		beatTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		beatTxt.scrollFactor.set();
@@ -202,10 +202,10 @@ class EditorPlayState extends MusicBeatState
 
 		var songData = PlayState.SONG;
 		Conductor.changeBPM(songData.bpm);
-		
+
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
-		
+
 		var noteData:Array<SwagSection>;
 
 		// NEW SHIT
@@ -288,7 +288,7 @@ class EditorPlayState extends MusicBeatState
 								swagNote.x += FlxG.width / 2 + 25;
 							}
 						}
-						
+
 						if(!noteTypeMap.exists(swagNote.noteType)) {
 							noteTypeMap.set(swagNote.noteType, true);
 						}
@@ -358,7 +358,7 @@ class EditorPlayState extends MusicBeatState
 				unspawnNotes.splice(index, 1);
 			}
 		}
-		
+
 		if (generatedMusic)
 		{
 			var fakeCrochet:Float = (60 / PlayState.SONG.bpm) * 1000;
@@ -404,7 +404,7 @@ class EditorPlayState extends MusicBeatState
 						daNote.y = (strumY + 0.45 * (Conductor.songPosition - daNote.strumTime) * PlayState.SONG.speed);
 						if (daNote.isSustainNote) {
 							//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
-							if (daNote.animation.curAnim.name.endsWith('end')) {
+							if (daNote.isHoldEnd) {
 								daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * PlayState.SONG.speed + (46 * (PlayState.SONG.speed - 1));
 								daNote.y -= 46 * (1 - (fakeCrochet / 600)) * PlayState.SONG.speed;
 								if(PlayState.isPixelStage) {
@@ -412,7 +412,7 @@ class EditorPlayState extends MusicBeatState
 								} else {
 									daNote.y -= 19;
 								}
-							} 
+							}
 							daNote.y += (Note.swagWidth / 2) - (60.5 * (PlayState.SONG.speed - 1));
 							daNote.y += 27.5 * ((PlayState.SONG.bpm / 100) - 1) * (PlayState.SONG.speed - 1);
 
@@ -454,7 +454,7 @@ class EditorPlayState extends MusicBeatState
 						vocals.volume = 1;
 
 					var time:Float = 0.15;
-					if(daNote.isSustainNote && !daNote.animation.curAnim.name.endsWith('end')) {
+					if(daNote.isSustainNote && !daNote.isHoldEnd) {
 						time += 0.15;
 					}
 					StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)) % 4, time);
@@ -507,14 +507,14 @@ class EditorPlayState extends MusicBeatState
 		stepTxt.text = 'Step: ' + curStep;
 		super.update(elapsed);
 	}
-	
+
 	override public function onFocus():Void
 	{
 		vocals.play();
 
 		super.onFocus();
 	}
-	
+
 	override public function onFocusLost():Void
 	{
 		vocals.pause();
@@ -676,7 +676,7 @@ class EditorPlayState extends MusicBeatState
 		var down = controls.NOTE_DOWN;
 		var left = controls.NOTE_LEFT;
 		var controlHoldArray:Array<Bool> = [left, down, up, right];
-		
+
 		// TO DO: Find a better way to handle controller inputs, this should work for now
 		if(ClientPrefs.controllerMode)
 		{
@@ -698,7 +698,7 @@ class EditorPlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				// hold note functions
-				if (daNote.isSustainNote && controlHoldArray[daNote.noteData] && daNote.canBeHit 
+				if (daNote.isSustainNote && controlHoldArray[daNote.noteData] && daNote.canBeHit
 				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit) {
 					goodNoteHit(daNote);
 				}
@@ -932,7 +932,7 @@ class EditorPlayState extends MusicBeatState
 
 			daLoop++;
 		}
-		/* 
+		/*
 			trace(combo);
 			trace(seperatedScore);
 			*/
@@ -1022,7 +1022,7 @@ class EditorPlayState extends MusicBeatState
 	function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
-		
+
 		var hue:Float = ClientPrefs.arrowHSV[data % 4][0] / 360;
 		var sat:Float = ClientPrefs.arrowHSV[data % 4][1] / 100;
 		var brt:Float = ClientPrefs.arrowHSV[data % 4][2] / 100;
@@ -1037,7 +1037,7 @@ class EditorPlayState extends MusicBeatState
 		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
 		grpNoteSplashes.add(splash);
 	}
-	
+
 	override function destroy() {
 		FlxG.sound.music.stop();
 		vocals.stop();

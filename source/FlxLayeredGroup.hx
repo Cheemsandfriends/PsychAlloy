@@ -43,7 +43,7 @@ class FlxNamedSprite extends FlxSprite
 
         if ((SimpleGraphic is FlxGraphicAsset))
             loadGraphic(SimpleGraphic);
-        else
+        else if(SimpleGraphic != null)
             frames = SimpleGraphic;
     }
 }

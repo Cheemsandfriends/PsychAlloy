@@ -21,7 +21,6 @@ class Conductor
 	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
 	public static var songPosition:Float=0;
-	public static var lastSongPos:Float;
 	public static var offset:Float = 0;
 
 	//public static var safeFrames:Int = 10;
@@ -29,11 +28,7 @@ class Conductor
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public function new()
-	{
-	}
-
-	public static function judgeNote(note:Note, diff:Float=0):Rating // die
+	public static function judgeNote(diff:Float=0):Rating // die
 	{
 		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
 		for(i in 0...data.length-1) //skips last window (Shit)

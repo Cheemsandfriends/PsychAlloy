@@ -8,9 +8,8 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
-class StrumNote extends FlxSprite
+class StrumNote extends FlxColorSwap
 {
-	private var colorSwap:ColorSwap;
 	public var resetAnim:Float = 0;
 	private var noteData:Int = 0;
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
@@ -21,9 +20,9 @@ class StrumNote extends FlxSprite
 
 	var _frozenFrames:FlxFramesCollection;
 	var _cacheFrames:FlxFramesCollection;
-	
+
 	private var player:Int;
-	
+
 	public var texture(default, set):String = null;
 	private function set_texture(value:String):String {
 		if(texture != value) {
@@ -32,14 +31,15 @@ class StrumNote extends FlxSprite
 		}
 		return value;
 	}
-	var directions = ["left", "down", "up", "right"];
+	static var directions = ["left", "down", "up", "right"];
 	public function new(x:Float, y:Float, leData:Int, player:Int) {
-		colorSwap = new ColorSwap();
-		shader = colorSwap.shader;
-		noteData = leData;
 		this.player = player;
 		this.noteData = leData;
 		super(x, y);
+
+		if(ClientPrefs.hasArrowHSV()) {
+			shader = getColorSwap();
+		}
 
 		var skin:String = 'NOTE_assets';
 		if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
@@ -95,11 +95,9 @@ class StrumNote extends FlxSprite
 			else
 				frames = (alloyEvent) ? _cacheFrames : Paths.getSparrowAtlas(texture);
 
-
-
 			antialiasing = ClientPrefs.globalAntialiasing;
 			setGraphicSize(Std.int(width * 0.7));
-			
+
 			animation.addByPrefix('static', 'arrow${directions[noteData].toUpperCase()}');
 			animation.addByPrefix('pressed', '${directions[noteData].toLowerCase()} press', 24, false);
 			animation.addByPrefix('confirm', '${directions[noteData].toLowerCase()} confirm', 24, false);
@@ -161,23 +159,23 @@ class StrumNote extends FlxSprite
 	}
 
 	public function playAnim(anim:String, ?force:Bool = false) {
-		
+
 		(animation.exists(anim)) ? animation.play(anim, force) : animation.play('confirm', force, false, 1);
-		
+
 		centerOffsets();
 		centerOrigin();
+
+		if(colorSwap == null) return;
+
 		if(animation.curAnim == null || animation.curAnim.name == 'static') {
 			colorSwap.hue = 0;
 			colorSwap.saturation = 0;
 			colorSwap.brightness = 0;
 		} else {
-			colorSwap.hue = ClientPrefs.arrowHSV[noteData % 4][0] / 360;
-			colorSwap.saturation = ClientPrefs.arrowHSV[noteData % 4][1] / 100;
-			colorSwap.brightness = ClientPrefs.arrowHSV[noteData % 4][2] / 100;
-
-			if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
-				centerOrigin();
-			}
+			var hsv = ClientPrefs.arrowHSV[noteData % 4];
+			colorSwap.hue = hsv[0] / 360;
+			colorSwap.saturation = hsv[1] / 100;
+			colorSwap.brightness = hsv[2] / 100;
 		}
 	}
 }

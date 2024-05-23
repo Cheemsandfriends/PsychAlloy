@@ -348,7 +348,7 @@ class FlxAnimateFilterRenderer
 
 		bmp.__renderTransform.identity();
 
-		var shader, cacheBitmap = null;
+		//var shader, cacheBitmap = null;
 		for (filter in filters)
 		{
 			if (filter.__preserveObject)
