@@ -276,9 +276,6 @@ class Note extends FlxColorSwap
 
 			offsetX -= width / 2;
 
-			if (PlayState.isPixelStage)
-				offsetX += 30;
-
 			if (prevNote.isSustainNote)
 			{
 				switch (prevNote.noteData)
@@ -300,17 +297,8 @@ class Note extends FlxColorSwap
 					prevNote.scale.y *= PlayState.instance.songSpeed;
 				}
 
-				if(PlayState.isPixelStage) {
-					prevNote.scale.y *= 1.19;
-					prevNote.scale.y *= (6 / height); //Auto adjust note size
-				}
 				prevNote.updateHitbox();
 				// prevNote.setGraphicSize();
-			}
-
-			if(PlayState.isPixelStage) {
-				scale.y *= PlayState.daPixelZoom;
-				updateHitbox();
 			}
 		} else if(!isSustainNote) {
 			earlyHitMult = 1;
@@ -345,36 +333,13 @@ class Note extends FlxColorSwap
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
 
-		if(PlayState.isPixelStage) {
-			if(isSustainNote) {
-				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'));
-				width = width / 4;
-				height = height / 2;
-				originalHeightForCalcs = height;
-				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
-			} else {
-				loadGraphic(Paths.image('pixelUI/' + blahblah));
-				width = width / 4;
-				height = height / 5;
-				loadGraphic(Paths.image('pixelUI/' + blahblah), true, Math.floor(width), Math.floor(height));
-			}
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-			loadPixelNoteAnims();
-			antialiasing = false;
+		if (frozen && _cacheFrames == null)
+			_cacheFrames = frames;
+		frames = (frozen && _frozenFrames != null) ? _frozenFrames : (_cacheFrames != null) ? _cacheFrames : Paths.getSparrowAtlas(blahblah);
 
-			if(isSustainNote) {
-				offsetX += lastNoteOffsetXForPixelAutoAdjusting;
-				lastNoteOffsetXForPixelAutoAdjusting = (width - 7) * (PlayState.daPixelZoom / 2);
-				offsetX -= lastNoteOffsetXForPixelAutoAdjusting;
-			}
-		} else {
-			if (frozen && _cacheFrames == null)
-				_cacheFrames = frames;
-			frames = (frozen && _frozenFrames != null) ? _frozenFrames : (_cacheFrames != null) ? _cacheFrames : Paths.getSparrowAtlas(blahblah);
+		loadNoteAnims();
+		antialiasing = ClientPrefs.globalAntialiasing;
 
-			loadNoteAnims();
-			antialiasing = ClientPrefs.globalAntialiasing;
-		}
 		if(isSustainNote) {
 			scale.y = lastScaleY;
 		}

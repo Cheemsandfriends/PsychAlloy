@@ -1,5 +1,6 @@
 package;
 
+import ComboSprite;
 import flixel.util.FlxDestroyUtil;
 import flixel.animation.FlxAnimationController;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -125,7 +126,6 @@ class PlayState extends MusicBeatState
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
 	public static var curStage:String = '';
-	public static var isPixelStage:Bool = false;
 	public static var SONG:SwagSong = null;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
@@ -145,7 +145,7 @@ class PlayState extends MusicBeatState
 	public var allNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
 
-	public var comboLayer:FlxTypedGroup<FlxSprite>;
+	public var comboLayer:ComboGroup;
 
 	private var strumLine:FlxSprite;
 
@@ -399,7 +399,6 @@ class PlayState extends MusicBeatState
 			stageData = {
 				directory: "",
 				defaultZoom: 0.9,
-				isPixelStage: false,
 
 				boyfriend: [770, 100],
 				girlfriend: [400, 130],
@@ -414,7 +413,6 @@ class PlayState extends MusicBeatState
 		}
 
 		defaultCamZoom = stageData.defaultZoom;
-		isPixelStage = stageData.isPixelStage;
 		BF_X = stageData.boyfriend[0];
 		BF_Y = stageData.boyfriend[1];
 		GF_X = stageData.girlfriend[0];
@@ -555,10 +553,6 @@ class PlayState extends MusicBeatState
 		switch(formattedSong)
 		{
 			case 'crucible', 'blammed': GameOverSubstate.characterName = 'alloy';
-		}
-
-		if(isPixelStage) {
-			introSoundsSuffix = '-pixel';
 		}
 
 		add(gfGroup); //Needed for blammed lights
@@ -722,7 +716,7 @@ class PlayState extends MusicBeatState
 		add(timeTxt);
 		timeBarBG.sprTracker = timeBar;
 
-		comboLayer = new FlxTypedGroup<FlxSprite>();
+		comboLayer = new ComboGroup();
 		comboLayer.cameras = [camHUD];
 		add(comboLayer);
 
@@ -1042,6 +1036,13 @@ class PlayState extends MusicBeatState
 		callOnLuas('onCreatePost', []);
 		#end
 
+		// Combo ratings
+		var cache = new ComboSprite();
+		cache.loadSprite("sick");
+		cache.alpha = 0.000001;
+		comboLayer.add(cache);
+		modchartTimers.set("cacheblahblah", new FlxTimer().start(3, (_) -> {cache.kill();}));
+
 		super.create();
 
 		Paths.clearUnusedMemory();
@@ -1329,16 +1330,12 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-		introAssets.set('default', ['ready', 'set', 'go']);
-		introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
+		var introAssets:Map<String, Array<String>> = [
+			"default" => ['ready', 'set', 'go']
+		];
 
 		var introAlts:Array<String> = introAssets.get('default');
 		var antialias:Bool = ClientPrefs.globalAntialiasing;
-		if(isPixelStage) {
-			introAlts = introAssets.get('pixel');
-			antialias = false;
-		}
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
@@ -1365,9 +1362,6 @@ class PlayState extends MusicBeatState
 					countdownReady.scrollFactor.set();
 					countdownReady.updateHitbox();
 
-					if (PlayState.isPixelStage)
-						countdownReady.setGraphicSize(Std.int(countdownReady.width * daPixelZoom));
-
 					countdownReady.screenCenter();
 					countdownReady.antialiasing = antialias;
 					insert(members.indexOf(notes), countdownReady);
@@ -1385,9 +1379,6 @@ class PlayState extends MusicBeatState
 					countdownSet.cameras = [camHUD];
 					countdownSet.scrollFactor.set();
 
-					if (PlayState.isPixelStage)
-						countdownSet.setGraphicSize(Std.int(countdownSet.width * daPixelZoom));
-
 					countdownSet.screenCenter();
 					countdownSet.antialiasing = antialias;
 					insert(members.indexOf(notes), countdownSet);
@@ -1404,9 +1395,6 @@ class PlayState extends MusicBeatState
 					countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 					countdownGo.cameras = [camHUD];
 					countdownGo.scrollFactor.set();
-
-					if (PlayState.isPixelStage)
-						countdownGo.setGraphicSize(Std.int(countdownGo.width * daPixelZoom));
 
 					countdownGo.updateHitbox();
 
@@ -2294,8 +2282,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
-				if(!daNote.mustPress) strumGroup = opponentStrums;
-
+				if (!daNote.mustPress) strumGroup = opponentStrums;
 				if (strumGroup.members.length < 1) return;
 
 				var strum = strumGroup.members[daNote.noteData];
@@ -2343,11 +2330,7 @@ class PlayState extends MusicBeatState
 						if (daNote.isHoldEnd) {
 							daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
 							daNote.y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
-							if(PlayState.isPixelStage) {
-								daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * PlayState.daPixelZoom;
-							} else {
-								daNote.y -= 19;
-							}
+							daNote.y -= 19;
 						}
 						daNote.y += (Note.swagWidth / 2) - (60.5 * (songSpeed - 1));
 						daNote.y += 27.5 * ((SONG.bpm / 100) - 1) * (songSpeed - 1);
@@ -2360,11 +2343,7 @@ class PlayState extends MusicBeatState
 				}
 
 				if(daNote.mustPress && cpuControlled) {
-					if(daNote.isSustainNote) {
-						if(daNote.canBeHit) {
-							goodNoteHit(daNote);
-						}
-					} else if(daNote.strumTime <= Conductor.songPosition || (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress)) {
+					if(daNote.strumTime <= Conductor.songPosition || (daNote.isSustainNote && daNote.canBeHit)) {
 						goodNoteHit(daNote);
 					}
 				}
@@ -3289,6 +3268,7 @@ class PlayState extends MusicBeatState
 
 		totalNotesHit += daRating.ratingMod;
 		note.ratingMod = daRating.ratingMod;
+		score = daRating.score;
 		if(!note.ratingDisabled) daRating.increase();
 		note.rating = daRating.name;
 
@@ -3323,19 +3303,10 @@ class PlayState extends MusicBeatState
 
 		if(ClientPrefs.hideHud) return;
 
-		var pixelShitPart1:String = "";
-		var pixelShitPart2:String = '';
-
-		if (PlayState.isPixelStage)
-		{
-			pixelShitPart1 = 'pixelUI/';
-			pixelShitPart2 = '-pixel';
-		}
-
 		var coolTextX = FlxG.width * 0.35;
 		if(showRating) {
-			var rating:FlxSprite = new FlxSprite();
-			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
+			var rating = comboLayer.recycleLoop(ComboSprite).resetProps();
+			rating.loadSprite(daRating.image);
 			rating.screenCenterY();
 			rating.x = coolTextX - 40;
 			rating.y -= 60;
@@ -3345,27 +3316,20 @@ class PlayState extends MusicBeatState
 			rating.x += ClientPrefs.comboOffset[0];
 			rating.y -= ClientPrefs.comboOffset[1];
 
-			if (!PlayState.isPixelStage)
-			{
-				rating.setGraphicSize(Std.int(rating.width * 0.7));
-				rating.antialiasing = ClientPrefs.globalAntialiasing;
-			}
-			else
-			{
-				rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.85));
-			}
+			rating.setGraphicSize(Std.int(rating.width * 0.7));
+			rating.antialiasing = ClientPrefs.globalAntialiasing;
+
 			rating.updateHitbox();
 
 			FlxTween.tween(rating, alphaZero, 0.2, {
 				startDelay: Conductor.crochet * 0.001,
 				onComplete: function(tween:FlxTween)
 				{
-					rating.destroy();
-					comboLayer.remove(rating, true);
+					rating.kill();
 				}
 			});
 
-			comboLayer.add(rating);
+			comboLayer.addEnd(rating);
 		}
 
 		if(!showComboNum) return;
@@ -3382,7 +3346,8 @@ class PlayState extends MusicBeatState
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
+			var numScore = comboLayer.recycleLoop(ComboSprite).resetProps();
+			numScore.loadSprite('num' + Std.string(i));
 			numScore.screenCenterY();
 			numScore.x = coolTextX + (43 * daLoop) - 90;
 			numScore.y += 80;
@@ -3390,29 +3355,20 @@ class PlayState extends MusicBeatState
 			numScore.x += ClientPrefs.comboOffset[2];
 			numScore.y -= ClientPrefs.comboOffset[3];
 
-			if (!PlayState.isPixelStage)
-			{
-				numScore.antialiasing = ClientPrefs.globalAntialiasing;
-				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-			}
-			else
-			{
-				numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
-			}
+			numScore.antialiasing = ClientPrefs.globalAntialiasing;
+			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
 
 			numScore.acceleration.y = FlxG.random.int(200, 300);
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-			//if (combo >= 10 || combo == 0)
-			comboLayer.add(numScore);
+			comboLayer.addEnd(numScore);
 
 			FlxTween.tween(numScore, alphaZero, 0.2, {
 				onComplete: function(tween:FlxTween)
 				{
-					numScore.destroy();
-					comboLayer.remove(numScore, true);
+					numScore.kill();
 				},
 				startDelay: Conductor.crochet * 0.002
 			});

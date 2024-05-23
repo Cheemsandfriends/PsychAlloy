@@ -53,55 +53,23 @@ class StrumNote extends FlxColorSwap
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 		noteData = FlxMath.absInt(noteData);
-		if(PlayState.isPixelStage)
+		if (frozen)
 		{
-			loadGraphic(Paths.image('pixelUI/' + texture));
-			width = width / 4;
-			height = height / 5;
-			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
+			if (_cacheFrames == null)
+				_cacheFrames = frames;
 
-			antialiasing = false;
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-
-			switch (noteData)
-			{
-				case 0:
-					animation.add('static', [0]);
-					animation.add('pressed', [4, 8], 12, false);
-					animation.add('confirm', [12, 16], 24, false);
-				case 1:
-					animation.add('static', [1]);
-					animation.add('pressed', [5, 9], 12, false);
-					animation.add('confirm', [13, 17], 24, false);
-				case 2:
-					animation.add('static', [2]);
-					animation.add('pressed', [6, 10], 12, false);
-					animation.add('confirm', [14, 18], 12, false);
-				case 3:
-					animation.add('static', [3]);
-					animation.add('pressed', [7, 11], 12, false);
-					animation.add('confirm', [15, 19], 24, false);
-			}
+			frames = _frozenFrames;
 		}
 		else
-		{
-			if (frozen)
-			{
-				if (_cacheFrames == null)
-					_cacheFrames = frames;
+			frames = (alloyEvent) ? _cacheFrames : Paths.getSparrowAtlas(texture);
 
-				frames = _frozenFrames;
-			}
-			else
-				frames = (alloyEvent) ? _cacheFrames : Paths.getSparrowAtlas(texture);
+		antialiasing = ClientPrefs.globalAntialiasing;
+		setGraphicSize(Std.int(width * 0.7));
 
-			antialiasing = ClientPrefs.globalAntialiasing;
-			setGraphicSize(Std.int(width * 0.7));
+		animation.addByPrefix('static', 'arrow${directions[noteData].toUpperCase()}');
+		animation.addByPrefix('pressed', '${directions[noteData].toLowerCase()} press', 24, false);
+		animation.addByPrefix('confirm', '${directions[noteData].toLowerCase()} confirm', 24, false);
 
-			animation.addByPrefix('static', 'arrow${directions[noteData].toUpperCase()}');
-			animation.addByPrefix('pressed', '${directions[noteData].toLowerCase()} press', 24, false);
-			animation.addByPrefix('confirm', '${directions[noteData].toLowerCase()} confirm', 24, false);
-		}
 		updateHitbox();
 
 		if(lastAnim != null)
