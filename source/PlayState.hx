@@ -260,6 +260,21 @@ class PlayState extends MusicBeatState
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
+	public var shouldClearStatics:Bool = false;
+
+	public static function clearStatics() {
+		SONG = null;
+		instance = null;
+		prevCamFollow = null;
+		prevCamFollowPos = null;
+		curStage = '';
+		SONG = null;
+		isStoryMode = false;
+		storyWeek = 0;
+		storyPlaylist = [];
+		storyDifficulty = 1;
+	}
+
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -1044,6 +1059,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 		CustomFadeTransition.nextCamera = camOther;
+
+		MemoryUtil.clearMajor();
+		MemoryUtil.disable();
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -3140,6 +3158,7 @@ class PlayState extends MusicBeatState
 					FlxG.save.flush();
 				}
 				changedDifficulty = false;
+				shouldClearStatics = true;
 			}
 			else
 			{
@@ -3147,18 +3166,6 @@ class PlayState extends MusicBeatState
 
 				trace('LOADING NEXT SONG');
 				trace(Paths.formatToSongPath(PlayState.storyPlaylist[0]) + difficulty);
-
-				var winterHorrorlandNext = (formattedSong == "eggnog");
-				if (winterHorrorlandNext)
-				{
-					var blackShit:FlxSprite = new FlxSprite(-FlxG.width * FlxG.camera.zoom,
-						-FlxG.height * FlxG.camera.zoom).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-					blackShit.scrollFactor.set();
-					add(blackShit);
-					camHUD.visible = false;
-
-					FlxG.sound.play(Paths.sound('Lights_Shut_off'));
-				}
 
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
@@ -3169,19 +3176,10 @@ class PlayState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);
 				FlxG.sound.music.stop();
 
-				if(winterHorrorlandNext) {
-					new FlxTimer().start(1.5, function(tmr:FlxTimer) {
-						cancelMusicFadeTween();
-						LoadingState.loadAndSwitchState(new PlayState());
-						NoteSplash.texturesLoaded = [];
+				NoteSplash.texturesLoaded = [];
 
-					});
-				} else {
-					NoteSplash.texturesLoaded = [];
-
-					cancelMusicFadeTween();
-					LoadingState.loadAndSwitchState(new PlayState());
-				}
+				cancelMusicFadeTween();
+				LoadingState.loadAndSwitchState(new PlayState());
 			}
 		}
 		else
@@ -3197,6 +3195,7 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			changedDifficulty = false;
+			shouldClearStatics = true;
 		}
 
 		transitioning = true;
@@ -4033,6 +4032,10 @@ class PlayState extends MusicBeatState
 		allNotes = FlxDestroyUtil.destroyArray(allNotes);
 		unspawnNotes = null;
 		super.destroy();
+		if (shouldClearStatics) clearStatics();
+
+		MemoryUtil.enable();
+		MemoryUtil.clearMajor();
 	}
 
 	public static function cancelMusicFadeTween() {

@@ -280,6 +280,8 @@ class MainMenuState extends MusicBeatState
 		hand.state = IDLE;
 		if(pos != null)
 			hand.setPosition(pos.x, pos.y);
+		else
+			hand.setPosition();
 		hand.onPress = onPress;
 		hand.state = PRESSING;
 	}

@@ -253,6 +253,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.finishSong(true);
 				case 'Toggle Botplay':
 					PlayState.instance.cpuControlled = !PlayState.instance.cpuControlled;
+					ClientPrefs.gameplaySettings.set("botplay", PlayState.instance.cpuControlled);
 					PlayState.changedDifficulty = true;
 					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
 					PlayState.instance.botplayTxt.alpha = 1;
@@ -263,6 +264,7 @@ class PauseSubState extends MusicBeatSubstate
 
 					WeekData.loadTheFirstEnabledMod();
 					NoteSplash.texturesLoaded = [];
+					PlayState.instance.shouldClearStatics = true;
 					MusicBeatState.switchState(new MainMenuState());
 					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
