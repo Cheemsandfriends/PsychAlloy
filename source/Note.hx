@@ -192,7 +192,32 @@ class Note extends FlxColorSwap
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?frozenAssets:Bool = false)
+	public static function resetStatics() {
+		_cachedHSV = null;
+		_cachedFramesCollections = [];
+	}
+
+	public static var _cachedHSV:Null<Bool> = null;
+	public static var _cachedFramesCollections:Map<String, FlxFramesCollection> = [];
+
+	public static function hasHSV():Bool {
+		if(_cachedHSV == null) {
+			_cachedHSV = ClientPrefs.hasArrowHSV();
+		}
+		return _cachedHSV;
+	}
+
+	public static function getAnim(noteData:Int):String {
+		return switch (noteData % 4) {
+			case 0: 'purple';
+			case 1: 'blue';
+			case 2: 'green';
+			case 3: 'red';
+			default: throw 'Invalid noteData';
+		}
+	}
+
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false)
 	{
 		super();
 		if (prevNote == null)
@@ -210,25 +235,13 @@ class Note extends FlxColorSwap
 		this.noteData = noteData;
 		if(noteData > -1) {
 			texture = '';
-			if(ClientPrefs.hasArrowHSV()) {
+			if(hasHSV()) {
 				shader = getColorSwap();
 			}
 
 			x += swagWidth * (noteData % 4);
 			if(!isSustainNote) { //Doing this 'if' check to fix the warnings on Senpai songs
-				var animToPlay:String = '';
-				switch (noteData % 4)
-				{
-					case 0:
-						animToPlay = 'purple';
-					case 1:
-						animToPlay = 'blue';
-					case 2:
-						animToPlay = 'green';
-					case 3:
-						animToPlay = 'red';
-				}
-				animation.play(animToPlay + 'Scroll');
+				animation.play(getAnim(noteData) + 'Scroll');
 			}
 		}
 
@@ -247,17 +260,7 @@ class Note extends FlxColorSwap
 			offsetX += width / 2;
 			copyAngle = false;
 
-			switch (noteData)
-			{
-				case 0:
-					animation.play('purpleholdend');
-				case 1:
-					animation.play('blueholdend');
-				case 2:
-					animation.play('greenholdend');
-				case 3:
-					animation.play('redholdend');
-			}
+			animation.play(getAnim(noteData) + 'holdend');
 
 			isHoldEnd = true;
 
@@ -267,17 +270,7 @@ class Note extends FlxColorSwap
 
 			if (prevNote.isSustainNote)
 			{
-				switch (prevNote.noteData)
-				{
-					case 0:
-						prevNote.animation.play('purplehold');
-					case 1:
-						prevNote.animation.play('bluehold');
-					case 2:
-						prevNote.animation.play('greenhold');
-					case 3:
-						prevNote.animation.play('redhold');
-				}
+				prevNote.animation.play(getAnim(prevNote.noteData) + 'hold');
 				prevNote.isHoldEnd = false;
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
@@ -322,7 +315,17 @@ class Note extends FlxColorSwap
 
 		if (frozen && _cacheFrames == null)
 			_cacheFrames = frames;
-		frames = (frozen && _frozenFrames != null) ? _frozenFrames : (_cacheFrames != null) ? _cacheFrames : Paths.getSparrowAtlas(blahblah);
+
+		if(frozen && _frozenFrames != null)
+			frames = _frozenFrames;
+		else if(_cacheFrames != null)
+			frames = _cacheFrames;
+		else {
+			if(!_cachedFramesCollections.exists(blahblah)) {
+				_cachedFramesCollections.set(blahblah, Paths.getSparrowAtlas(blahblah));
+			}
+			frames = _cachedFramesCollections.get(blahblah);
+		}
 
 		loadNoteAnims();
 		antialiasing = ClientPrefs.globalAntialiasing;

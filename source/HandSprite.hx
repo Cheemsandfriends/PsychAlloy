@@ -40,7 +40,8 @@ class HandSprite extends FlxAnimate
 
     function get__specialAnim()
     {
-        return [LIFTING, IDLE, PRESSING, null].indexOf(state) == -1;
+        //return [LIFTING, IDLE, PRESSING, null].indexOf(state) == -1;
+        return state != LIFTING && state != IDLE && state != PRESSING && state != null;
     }
     function get_onPress()
     {

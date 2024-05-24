@@ -53,6 +53,8 @@ import vlc.MP4Handler;
 using StringTools;
 using ExtendUtil;
 
+final _point = new FlxPoint();
+
 class PlayState extends MusicBeatState
 {
 	public static var STRUM_X = 42;
@@ -268,11 +270,7 @@ class PlayState extends MusicBeatState
 		prevCamFollow = null;
 		prevCamFollowPos = null;
 		curStage = '';
-		SONG = null;
-		isStoryMode = false;
-		storyWeek = 0;
 		storyPlaylist = [];
-		storyDifficulty = 1;
 	}
 
 	override public function create()
@@ -618,14 +616,6 @@ class PlayState extends MusicBeatState
 		{
 			switch (curStage)
 			{
-				case 'limo':
-					gfVersion = 'gf-car';
-				case 'mall' | 'mallEvil':
-					gfVersion = 'gf-christmas';
-				case 'school' | 'schoolEvil':
-					gfVersion = 'gf-pixel';
-				case 'tank':
-					gfVersion = 'gf-tankmen';
 				default:
 					gfVersion = 'gf';
 			}
@@ -655,8 +645,9 @@ class PlayState extends MusicBeatState
 		var camPos:FlxPoint = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if(gf != null)
 		{
-			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
-			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
+			gf.getGraphicMidpoint(_point);
+			camPos.x += _point.x + gf.cameraPosition[0];
+			camPos.y += _point.y + gf.cameraPosition[1];
 		}
 
 		if(dad.curCharacter.startsWith('gf')) {
@@ -1564,6 +1555,9 @@ class PlayState extends MusicBeatState
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 	#end
+
+	var spawnNoteID = 0;
+
 	private function generateSong():Void
 	{
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype','multiplicative');
@@ -1625,40 +1619,35 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		var totalNotes: Int = 0;
-
 		function calculateTotal(song:Array<SwagSection>) {
 			//var speed = FlxMath.roundDecimal(songSpeed, 2);
+			var notes: Int = 0;
 
-			for (section in song)
-			{
-				for (songNotes in section.sectionNotes)
-				{
-					totalNotes++;
+			for (section in song) {
+				for (songNotes in section.sectionNotes) {
+					notes++;
 
-					var floorSus: Int = Math.floor(songNotes[2].sustainLength / Conductor.stepCrochet);
-					if (floorSus > 0)
-					{
-						//for (susNote in 0...floorSus + 1)
-						//{
-						//	totalNotes++;
-						//}
-						totalNotes += floorSus;
+					var floorSus:Int = Math.floor(songNotes[2] / Conductor.stepCrochet);
+					if(floorSus > 0) {
+						for (i in 0...floorSus+1) {
+							notes++;
+						}
 					}
 				}
 			}
+			return notes;
 		}
-		calculateTotal(noteData);
+
+		var totalNotes: Int = 0;
+		totalNotes += calculateTotal(noteData);
 
 		allNotes.resize(totalNotes);
 		unspawnNotes.resize(totalNotes);
 
-		var noteID = 0;
-
 		function addNote(note:Note) {
-			unspawnNotes[noteID] = note;
-			allNotes[noteID] = note;
-			noteID++;
+			note.ID = spawnNoteID;
+			allNotes[spawnNoteID] = unspawnNotes[spawnNoteID] = note;
+			spawnNoteID++;
 			return note;
 		}
 
@@ -1683,7 +1672,7 @@ class PlayState extends MusicBeatState
 
 				var oldNote:Note = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, boyfriend.alloyShootEvent);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false);
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
@@ -1694,10 +1683,8 @@ class PlayState extends MusicBeatState
 
 				swagNote.scrollFactor.set();
 
-				var susLength:Float = swagNote.sustainLength;
+				var susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
 
-				susLength = susLength / Conductor.stepCrochet;
-				swagNote.ID = noteID;
 				#if LUA_ALLOWED
 				modchartObjects.set('note${swagNote.ID}', swagNote);
 				#end
@@ -1708,11 +1695,10 @@ class PlayState extends MusicBeatState
 				if(floorSus > 0) {
 					for (susNote in 0...floorSus+1)
 					{
-						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + holdOffset, daNoteData, oldNote, true, false, boyfriend.alloyShootEvent);
+						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + holdOffset, daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
 						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
 						sustainNote.noteType = swagNote.noteType;
-						sustainNote.ID = noteID;
 						#if LUA_ALLOWED
 						modchartObjects.set('note${sustainNote.ID}', sustainNote);
 						#end
@@ -1775,7 +1761,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if debug
-		trace(noteID);
+		trace(spawnNoteID);
 		#end
 
 		// trace(unspawnNotes.length);
@@ -2945,7 +2931,8 @@ class PlayState extends MusicBeatState
 
 		if (SONG.notes[curSection].gfSection && gf != null)
 		{
-			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
+			gf.getMidpoint(_point);
+			camFollow.set(_point.x, _point.y);
 			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
 			tweenCamIn();
@@ -2975,14 +2962,16 @@ class PlayState extends MusicBeatState
 	{
 		if(isDad)
 		{
-			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+			dad.getMidpoint(_point);
+			camFollow.set(_point.x + 150, _point.y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
 			tweenCamIn();
 		}
 		else
 		{
-			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+			boyfriend.getMidpoint(_point);
+			camFollow.set(_point.x - 100, _point.y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
 
@@ -4033,6 +4022,7 @@ class PlayState extends MusicBeatState
 		unspawnNotes = null;
 		super.destroy();
 		if (shouldClearStatics) clearStatics();
+		Note.resetStatics();
 
 		MemoryUtil.enable();
 		MemoryUtil.clearMajor();
@@ -4065,9 +4055,6 @@ class PlayState extends MusicBeatState
 		callOnLuas('onStepHit', []);
 		#end
 	}
-
-	var lightningStrikeBeat:Int = 0;
-	var lightningOffset:Int = 8;
 
 	var lastBeatHit:Int = -1;
 

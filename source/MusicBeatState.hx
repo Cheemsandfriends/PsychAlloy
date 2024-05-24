@@ -174,6 +174,9 @@ class MusicBeatState extends FlxUIState
 	{
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
-		return [0.0,null].indexOf(val) != -1 ? 4 : val;
+		//return [0.0,null].indexOf(val) != -1 ? 4 : val;
+		if(val == null) return 4.0;
+		if(val == 0.0) return 4.0;
+		return val;
 	}
 }

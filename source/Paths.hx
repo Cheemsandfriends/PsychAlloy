@@ -1,7 +1,6 @@
 package;
 
 import flxanimate.frames.FlxAnimateFrames;
-import animateatlas.AtlasFrameMaker;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
 import openfl.geom.Rectangle;
@@ -81,12 +80,12 @@ class Paths
 			}
 		}
 		// run the garbage collector for good measure lmfao
-		System.gc();
+		MemoryUtil.clearMajor();
 	}
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
-	public static function clearStoredMemory(?cleanUnused:Bool = false) {
+	public static function clearStoredMemory() {
 		// clear anything not in the tracked assets list
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())

@@ -3011,9 +3011,12 @@ class ChartingState extends MusicBeatState
 	{
 		if (section == null) section = curSec;
 		var val:Null<Float> = null;
-		
+
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
-		return ([0.0,null].indexOf(val) == -1) ? val : 4;
+		//return ([0.0,null].indexOf(val) == -1) ? val : 4;
+		if(val == null) return 4.0;
+		if(val == 0.0) return 4.0;
+		return val;
 	}
 }
 

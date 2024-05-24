@@ -247,21 +247,21 @@ class FlxNestedSprite extends FlxSprite
 	/**
 	 * Scale of this sprite relative to parent
 	 */
-	public var relativeScale(default, null):FlxPoint = FlxPoint.get(1, 1);
+	public var relativeScale(default, null):FlxPoint = new FlxPoint(1, 1);
 
 	@:noCompletion
 	@:deprecated("`relativeVelocity` is deprecated. Use `velocity` instead.")
 	/**
 	 * Velocity relative to parent sprite
 	 */
-	public var relativeVelocity(default, null):FlxPoint = FlxPoint.get();
+	public var relativeVelocity(default, null):FlxPoint = new FlxPoint();
 
 	@:noCompletion
 	@:deprecated("`relativeAcceleration` is deprecated. Use `acceleration` instead.")
 	/**
 	 * Acceleration relative to parent sprite
 	 */
-	public var relativeAcceleration(default, null):FlxPoint = FlxPoint.get();
+	public var relativeAcceleration(default, null):FlxPoint = new FlxPoint();
 
 
 	/**

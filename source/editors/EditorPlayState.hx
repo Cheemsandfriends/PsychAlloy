@@ -353,12 +353,12 @@ class EditorPlayState extends MusicBeatState
 
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
-				var dunceNote:Note = unspawnNotes[0];
+				var dunceNote:Note = unspawnNotes.shift();
 				notes.insert(0, dunceNote);
 				dunceNote.spawned = true;
 
-				var index:Int = unspawnNotes.indexOf(dunceNote);
-				unspawnNotes.splice(index, 1);
+				//var index:Int = unspawnNotes.indexOf(dunceNote);
+				//unspawnNotes.splice(index, 1);
 			}
 		}
 

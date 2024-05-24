@@ -12,7 +12,9 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.app.Application;
+#if ACHIEVEMENTS_ALLOWED
 import Achievements;
+#end
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
 import options.OptionsState;
@@ -217,7 +219,7 @@ class MainMenuState extends MusicBeatState
 					changeItem();
 				}
 			}
-			if (selectinLevels() && (controls.UI_LEFT_P || controls.UI_RIGHT_P))
+			if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && selectinLevels())
 			{
 				var point = (controls.UI_LEFT_P) ? new FlxPoint(100, -50) : new FlxPoint(190, -80);
 				scrollHand(point, function()
@@ -232,7 +234,7 @@ class MainMenuState extends MusicBeatState
 			{
 				var curMenu = arm.options[curSelected].name;
 
-				scrollHand(null, function()
+				scrollHand(new FlxPoint(0, 0), function()
 				{
 					if (arm.state == UNLOCKED)
 					{
