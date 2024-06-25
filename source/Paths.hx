@@ -64,10 +64,13 @@ class Paths
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		// clear non local assets in the tracked assets list
+
 		for (key in currentTrackedAssets.keys()) {
 			// if it is not currently contained within the used local assets
 			if (!localTrackedAssets.contains(key)
 				&& !dumpExclusions.contains(key)) {
+				MemoryUtil.enable();
+
 				// get rid of it
 				var obj = currentTrackedAssets.get(key);
 				@:privateAccess
@@ -76,17 +79,21 @@ class Paths
 					FlxG.bitmap._cache.remove(key);
 					obj.destroy();
 					currentTrackedAssets.remove(key);
+					MemoryUtil.clearMinor();
 				}
+				MemoryUtil.disable();
+
 			}
 		}
 		// run the garbage collector for good measure lmfao
-		MemoryUtil.clearMajor();
 	}
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
 	public static function clearStoredMemory() {
 		// clear anything not in the tracked assets list
+		MemoryUtil.enable();
+
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())
 		{
@@ -110,6 +117,7 @@ class Paths
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		openfl.Assets.cache.clear("songs");
+		MemoryUtil.disable();
 	}
 
 	static public var currentModDirectory:String = '';

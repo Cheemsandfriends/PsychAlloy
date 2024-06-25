@@ -260,6 +260,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		add(bgFade);
 
 		bg = new FlxSprite();
+		bg.makeGraphic(1, 1, 0);
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		bg.scrollFactor.set();
 		add(bg);
@@ -278,12 +279,14 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				
 				arrow.frames.pushFrame(arrowFrame);
 			}
-			arrow.setGraphicSize(arrow.width * 0.2);
+			arrow.setGraphicSize(arrow.width * 0.15);
 			arrow.antialiasing = ClientPrefs.globalAntialiasing;
 			arrow.updateHitbox();
 
+			arrow.blend = SCREEN;
+
 			arrow.screenCenter(Y);
-			arrow.x = (FlxG.width - arrow.width) * i;
+			arrow.x = (FlxG.width - arrow.width - 10) * i;
 
 			arrow.flipX = i == 1;
 
@@ -402,11 +405,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 	public function disposeBGs()
 	{
-		for (bg in backgrounds)
-		{
-			if (bg != null)
-				bg.destroy();
-		}
 		backgrounds = null;
 	}
 

@@ -229,6 +229,11 @@ class MainMenuState extends MusicBeatState
 					selectedSomethin = false;
 				});
 			}
+			if (FlxG.keys.justPressed.EIGHT)
+			{
+				FlxG.sound.music.stop();
+				MusicBeatState.switchState(new TaTest());
+			}
 
 			if (controls.ACCEPT)
 			{

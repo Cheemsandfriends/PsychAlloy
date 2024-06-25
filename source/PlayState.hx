@@ -548,7 +548,7 @@ class PlayState extends MusicBeatState
 
 		switch(formattedSong)
 		{
-			case 'crucible', 'blammed': GameOverSubstate.characterName = 'alloy';
+			case 'crucible', 'blammed-remix': GameOverSubstate.characterName = 'alloy';
 		}
 
 		add(gfGroup); //Needed for blammed lights
@@ -1051,8 +1051,6 @@ class PlayState extends MusicBeatState
 		}
 		CustomFadeTransition.nextCamera = camOther;
 
-		MemoryUtil.clearMajor();
-		MemoryUtil.disable();
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -2862,6 +2860,9 @@ class PlayState extends MusicBeatState
 				}
 			case 'Alloy Shoot':
 			{
+				if (cpuControlled)
+					boyfriend.dodged = true;
+				
 				if (!boyfriend.dodged)
 				{
 					freeze();
@@ -4024,8 +4025,8 @@ class PlayState extends MusicBeatState
 		if (shouldClearStatics) clearStatics();
 		Note.resetStatics();
 
-		MemoryUtil.enable();
-		MemoryUtil.clearMajor();
+		// MemoryUtil.enable();
+		// MemoryUtil.clearMajor();
 	}
 
 	public static function cancelMusicFadeTween() {

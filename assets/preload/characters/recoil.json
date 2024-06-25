@@ -1,8 +1,11 @@
 {
 	"animations": null,
+	"sounds": {
+		"land": "Recoil_Drop"
+	},
 	"camera_position": [
 		0,
-		-300
+		-100
 	],
 	"flip_x": false,
 	"healthbar_colors": [
@@ -15,7 +18,7 @@
 	"no_antialiasing": false,
 	"position": [
 		0,
-		400
+		300
 	],
 	"scale": 1,
 	"sing_duration": 4

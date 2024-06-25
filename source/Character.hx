@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 import flxanimate.FlxAnimate;
@@ -17,6 +18,7 @@ using StringTools;
 
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
+	@:optional var sounds:Dynamic;
 	var image:String;
 	var scale:Float;
 	var sing_duration:Float;
@@ -80,6 +82,8 @@ class Character extends FlxSprite
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 
 	public var curAnimName:Null<String> = null;
+
+	var sounds:Map<String, String> = [];
 
 	var atlas:FlxAnimate = null;
 
@@ -166,6 +170,8 @@ class Character extends FlxSprite
 						makeGraphic(1, 1, 0);
 						atlas = new FlxAnimate();
 						atlas.loadAtlas(Paths.getTextureAtlas(json.image));
+						
+						atlas.anim.metadata.skipFilters = !ClientPrefs.intensiveFilters;
 
 						atlas.alpha = 0.0001;
 						atlas.draw();
@@ -235,6 +241,13 @@ class Character extends FlxSprite
 						}
 					} else {
 						quickAnimAdd('idle', 'BF idle dance');
+					}
+				}
+				if (json.sounds != null)
+				{
+					for (sound in Reflect.fields(json.sounds))
+					{
+						sounds.set(sound, Std.string(Reflect.field(json.sounds, sound)));
 					}
 				}
 				//trace('Loaded file to character ' + curCharacter);
@@ -386,6 +399,11 @@ class Character extends FlxSprite
 			{
 				playAnim(curAnimName + '-loop');
 			}
+			if (!playedSound)
+			{
+				FlxG.sound.play(Paths.sound(sounds[curAnimName]));
+				playedSound = true;
+			}
 		}
 		super.update(elapsed);
 
@@ -394,12 +412,14 @@ class Character extends FlxSprite
 	}
 	override public function draw()
 	{
+		
 		if (atlas != null) {
 			copyAtlasValues();
 			atlas.draw();
 		} else {
 			super.draw();
 		}
+
 	}
 
 	function loadAtlas() {
@@ -469,6 +489,8 @@ class Character extends FlxSprite
 	}
 
 	var mainPivot:FlxPoint;
+
+	var playedSound:Bool = true;
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		specialAnim = false;
@@ -528,6 +550,8 @@ class Character extends FlxSprite
 
 		curAnimName = AnimName;
 
+		if (sounds != null && sounds.exists(curAnimName))
+			playedSound = false;
 
 		if (isGF)
 		{

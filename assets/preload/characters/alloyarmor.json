@@ -1,22 +1,29 @@
 {
 	"animations": null,
-	"no_antialiasing": false,
-	"image": "characters/Alloy",
-	"position": [
-		0,
-		300
+	"sounds": {
+		"hey": "Alloy_Taunt",
+		"bikeSlide": "BikeTransform",
+		"flourish": "GunTransformation",
+		"transform": "Alloy_Armor"
+	},
+
+	"camera_position": [
+		100,
+		-100
 	],
-	"healthicon": "upgrade",
 	"flip_x": true,
 	"healthbar_colors": [
 		63,
 		92,
 		133
 	],
-	"camera_position": [
-		100,
-		-100
+	"healthicon": "upgrade",
+	"image": "characters/Alloy",
+	"no_antialiasing": false,
+	"position": [
+		0,
+		300
 	],
-	"sing_duration": 4,
-	"scale": 1
+	"scale": 1,
+	"sing_duration": 4
 }

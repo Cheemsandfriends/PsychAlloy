@@ -67,6 +67,19 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		mipOption.onChange = onChangeMipMapping;
 		mipOption.showBoyfriend = true;
 		addOption(mipOption);
+
+		var option:Option = new Option('Intensive Filters', //Name
+			'If unchecked, disables some intensive filters,\n Mainly the filters that Recoil and Alloy use in-game.', //Description
+			'intensiveFilters', //Save data variable name
+			'bool', //Variable type
+			true); //Default value
+
+		option.showAlloy = true;
+		option.onChange = onChangeFilters;
+		
+		addOption(option);
+
+
 		
 		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
 		var option:Option = new Option('Framerate',
@@ -113,6 +126,12 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 		ClientPrefs.mipMapping = FlxDrawQuadsItem.mipmapping;
 		trace(FlxDrawQuadsItem.mipmapping);
+	}
+
+	function onChangeFilters()
+	{
+		@:privateAccess
+		alloy.atlas.anim.metadata.skipFilters = !ClientPrefs.intensiveFilters;
 	}
 
 	function onChangeFramerate()

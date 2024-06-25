@@ -1,5 +1,12 @@
 {
 	"animations": null,
+	"sounds": {
+		"hey": "Alloy_Taunt",
+		"bikeSlide": "BikeTransform",
+		"flourish": "GunTransformation",
+		"transform": "Alloy_Armor"
+	},
+
 	"camera_position": [
 		100,
 		-100

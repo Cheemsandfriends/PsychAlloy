@@ -38,7 +38,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	private var grpTexts:FlxTypedGroup<AttachedText>;
 
 	private var boyfriend:Character = null;
-	private var miniBoyfriend:Character = null;
+	private var alloy:Character = null;
+	private var gf:Character = null;
 	private var descBox:FlxSprite;
 	private var descText:FlxText;
 
@@ -118,6 +119,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			if(optionsArray[i].showBoyfriend && boyfriend == null)
 			{
 				reloadBoyfriend();
+			}
+			if(optionsArray[i].showAlloy && alloy == null)
+			{
+				reloadAlloy();
 			}
 			updateTextFrom(optionsArray[i]);
 		}
@@ -262,7 +267,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		if(boyfriend != null && boyfriend.isFinishedAnim()) {
 			boyfriend.dance();
-			miniBoyfriend.dance();
+			gf.dance();
 		}
 
 		if(nextAccept > 0) {
@@ -325,8 +330,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(boyfriend != null)
 		{
 			boyfriend.visible = optionsArray[curSelected].showBoyfriend;
-			miniBoyfriend.visible = optionsArray[curSelected].showBoyfriend;
+			gf.visible = optionsArray[curSelected].showBoyfriend;
 		}
+		if (alloy != null)
+			alloy.visible = optionsArray[curSelected].showAlloy;
 		curOption = optionsArray[curSelected]; //shorter lol
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
@@ -349,13 +356,33 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		insert(1, boyfriend);
 		boyfriend.visible = wasVisible;
 
-		miniBoyfriend = new Character(boyfriend.x - boyfriend.width * 1.5 + 50, boyfriend.y - boyfriend.height * 0.5, 'gf');
-		miniBoyfriend.setGraphicSize(Std.int(miniBoyfriend.width * 0.2));
-		miniBoyfriend.updateHitbox();
-		miniBoyfriend.dance();
-		insert(2, miniBoyfriend);
-		miniBoyfriend.visible = wasVisible;
+		gf = new Character(boyfriend.x - boyfriend.width * 1.5 + 50, boyfriend.y - boyfriend.height * 0.5, 'gf');
+		gf.setGraphicSize(Std.int(gf.width * 0.2));
+		gf.updateHitbox();
+		gf.dance();
+		insert(2, gf);
+		gf.visible = wasVisible;
 		Paths.setCurrentLevel(cl);
+	}
+
+	public function reloadAlloy()
+	{
+		var wasVisible:Bool = false;
+		if(alloy != null) {
+			wasVisible = alloy.visible;
+			alloy.kill();
+			remove(alloy);
+			alloy.destroy();
+		}
+
+		var cl = Paths.currentLevel;
+		Paths.setCurrentLevel("shared");
+		alloy = new Character(840, 170, 'alloy', true);
+		alloy.setGraphicSize(Std.int(alloy.width * 0.75));
+		alloy.updateHitbox();
+		alloy.dance();
+		insert(1, alloy);
+		alloy.visible = wasVisible;
 	}
 
 	function reloadCheckboxes() {

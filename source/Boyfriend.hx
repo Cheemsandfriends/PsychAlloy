@@ -18,6 +18,8 @@ class Boyfriend extends Character
 	public var frozenNoteCount(default, set):Int;
 	var _gotframes:Bool = false;
 	var _sufix:String = "";
+
+	var _space:Bool = false;
 	public function new(x:Float = 0, y:Float = 0, ?char:String = 'bf')
 	{
 		super(x, y, char, true);
@@ -57,15 +59,16 @@ class Boyfriend extends Character
 
 			if (!startedDeath && alloyShootEvent)
 			{
-				if (!dodged && FlxG.keys.justPressed.SPACE)
+				if (!dodged && (FlxG.keys.justPressed.SPACE && !PlayState.instance.cpuControlled))
 				{
 					dodged = true;
+					_space = true;
 				}
 				
-				if (dodged && (FlxG.keys.released.SPACE || isFinishedAnim()))
+				if (dodged && (FlxG.keys.released.SPACE && _space || isFinishedAnim()))
 				{
 					dodged = false;
-					specialAnim = false;
+					_space = false;
 					dance();
 				}
 			}
